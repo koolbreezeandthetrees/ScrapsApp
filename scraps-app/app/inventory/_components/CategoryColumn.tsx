@@ -88,7 +88,7 @@ export default function CategoryColumn({
         onClick={() => setShowAddSection(!showAddSection)}
         aria-expanded={showAddSection}
       >
-        {showAddSection ? "▲ Close" : `▼ Add to ${category.name}`}
+        {showAddSection ? `▲ Add to ${category.name}` : `▼ Add to ${category.name}`}
       </button>
 
       {showAddSection && availableColors.length > 0 && (

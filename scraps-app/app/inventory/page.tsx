@@ -21,24 +21,19 @@ export default function InventoryPage() {
   const [inventory, setInventory] = useState<{
     [key: number]: InventoryItem[];
   }>({});
+  const [showIngredientForm, setShowIngredientForm] = useState(false); // ✅ State for toggling form
 
   useEffect(() => {
     if (!user?.id) return;
 
     async function fetchData() {
-      if (!user) return;
-      const exists = await checkInventory(user.id);
-      setHasInventory(!!exists);
+      const exists = user ? await checkInventory(user.id) : false;
+      setHasInventory(Boolean(exists));
 
       if (exists) {
+        if (!user) return;
         const data = await getInventory(user.id);
-
-        // ✅ Sort categories by ID before updating state
-        const sortedCategories = [...data.categories].sort(
-          (a, b) => a.id - b.id
-        );
-
-        setCategories(sortedCategories);
+        setCategories([...data.categories].sort((a, b) => a.id - b.id)); // Sort categories by ID
         setInventory(data.inventory);
       }
     }
@@ -55,20 +50,18 @@ export default function InventoryPage() {
   const handleUpdateQuantity = async (ingredientId: number, change: number) => {
     if (!user?.id) return;
 
-    // ✅ Optimistically update state
+    // Optimistic UI update
     setInventory((prevInventory) => {
       const updatedInventory = { ...prevInventory };
-
       Object.keys(updatedInventory).forEach((categoryId) => {
         updatedInventory[Number(categoryId)] = updatedInventory[
           Number(categoryId)
         ].map((item) =>
           item.id === ingredientId
-            ? { ...item, quantity: item.quantity + change } // Increase or decrease quantity
+            ? { ...item, quantity: item.quantity + change }
             : item
         );
       });
-
       return updatedInventory;
     });
 
@@ -78,62 +71,47 @@ export default function InventoryPage() {
         ingredientId,
         change
       );
-
-      if (!result.success) {
-        throw new Error("API failed"); // Rollback if API fails
-      }
+      if (!result.success) throw new Error("API failed");
     } catch (error) {
       console.error("Error updating quantity:", error);
-
-      // ❌ Rollback state if API fails
+      // Rollback UI if API call fails
       setInventory((prevInventory) => {
-        const updatedInventory = { ...prevInventory };
-
-        Object.keys(updatedInventory).forEach((categoryId) => {
-          updatedInventory[Number(categoryId)] = updatedInventory[
+        const rolledBackInventory = { ...prevInventory };
+        Object.keys(rolledBackInventory).forEach((categoryId) => {
+          rolledBackInventory[Number(categoryId)] = rolledBackInventory[
             Number(categoryId)
           ].map((item) =>
             item.id === ingredientId
-              ? { ...item, quantity: item.quantity - change } // Revert change
+              ? { ...item, quantity: item.quantity - change }
               : item
           );
         });
-
-        return updatedInventory;
+        return rolledBackInventory;
       });
     }
   };
 
+  const handleAddIngredient = async (
+    categoryId: number,
+    ingredientId: number
+  ) => {
+    if (!user?.id) return;
 
-const handleAddIngredient = async (
-  categoryId: number,
-  ingredientId: number
-) => {
-  if (!user?.id) return;
-
-  const result: { success: boolean; message?: string } = await addIngredientToInventory(user.id, ingredientId);
-
-  if (result.success) {
-    // ✅ Fetch full ingredient details after adding
-    const newIngredient = await getIngredientById(ingredientId);
-
-    setInventory((prevInventory) => {
-      const updatedInventory = { ...prevInventory };
-      updatedInventory[categoryId] = [
-        ...(updatedInventory[categoryId] || []),
-        {
-          ...newIngredient,
-          quantity: 1, // or any default quantity
-          categoryId: categoryId,
-        },
-      ];
-      return updatedInventory;
-    });
-  } else {
-    alert("Error adding ingredient: " + result.message);
-  }
-};
-
+    const result: { success: boolean; message?: string } = await addIngredientToInventory(user.id, ingredientId);
+    if (result.success) {
+      const newIngredient = await getIngredientById(ingredientId);
+      setInventory((prevInventory) => {
+        const updatedInventory = { ...prevInventory };
+        updatedInventory[categoryId] = [
+          ...(updatedInventory[categoryId] || []),
+          { ...newIngredient, quantity: 1, categoryId },
+        ];
+        return updatedInventory;
+      });
+    } else {
+      alert("Error adding ingredient: " + (result.message || "Unknown error"));
+    }
+  };
 
   return (
     <div className="inv-container-main">
@@ -146,18 +124,26 @@ const handleAddIngredient = async (
               key={category.id}
               category={category}
               inventory={inventory[category.id] || []}
-              onFilter={(color, categoryId) =>
-                console.log(`Filter by ${color} in category ${categoryId}`)
-              }
               onUpdateQuantity={handleUpdateQuantity}
               onAddIngredient={handleAddIngredient}
+              onFilter={() => {}}
             />
           ))}
         </div>
       ) : (
         <button onClick={handleCreateInventory}>Create Inventory</button>
       )}
-      <IngredientForm />
+
+      {/* ✅ Toggle button for the form */}
+      <button
+        className="floating-btn"
+        onClick={() => setShowIngredientForm((prev) => !prev)}
+      >
+        {showIngredientForm ? "Close Form" : "+ Add Ingredient"}
+      </button>
+
+      {/* ✅ Conditionally render the IngredientForm */}
+      {showIngredientForm && <IngredientForm />}
     </div>
   );
 }

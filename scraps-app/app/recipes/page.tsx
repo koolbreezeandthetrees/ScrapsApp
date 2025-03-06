@@ -3,7 +3,7 @@
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 
-export default async function Page() {
+export default async function RecipesPage() {
   const result = await db.execute(sql`SELECT current_database()`)
   console.log(result)
   return (
