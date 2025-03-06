@@ -6,7 +6,9 @@ import {
   addIngredientToInventory,
   checkInventory,
   createInventory,
+  getIngredientById,
   getInventory,
+  updateInventoryQuantity,
 } from "../actions";
 import IngredientForm from "./_components/IngredientForm";
 import CategoryColumn from "./_components/CategoryColumn";
@@ -51,60 +53,87 @@ export default function InventoryPage() {
   };
 
   const handleUpdateQuantity = async (ingredientId: number, change: number) => {
-    try {
-      const response = await fetch("/api/update-quantity", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ingredient_id: ingredientId, quantity: change }),
+    if (!user?.id) return;
+
+    // ✅ Optimistically update state
+    setInventory((prevInventory) => {
+      const updatedInventory = { ...prevInventory };
+
+      Object.keys(updatedInventory).forEach((categoryId) => {
+        updatedInventory[Number(categoryId)] = updatedInventory[
+          Number(categoryId)
+        ].map((item) =>
+          item.id === ingredientId
+            ? { ...item, quantity: item.quantity + change } // Increase or decrease quantity
+            : item
+        );
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setInventory((prevInventory) => {
-          const updatedInventory = { ...prevInventory };
-          Object.keys(updatedInventory).forEach((categoryId) => {
-            updatedInventory[Number(categoryId)] = updatedInventory[
-              Number(categoryId)
-            ].map((item) =>
-              item.id === ingredientId
-                ? { ...item, quantity: data.new_quantity }
-                : item
-            );
-          });
-          return updatedInventory;
-        });
+      return updatedInventory;
+    });
+
+    try {
+      const result = await updateInventoryQuantity(
+        user.id,
+        ingredientId,
+        change
+      );
+
+      if (!result.success) {
+        throw new Error("API failed"); // Rollback if API fails
       }
     } catch (error) {
       console.error("Error updating quantity:", error);
-    }
-  };
 
-  const handleAddIngredient = async (
-    categoryId: number,
-    ingredientId: number,
-    ingredientName: string
-  ) => {
-    if (!user?.id) return;
-
-    const result = await addIngredientToInventory(user.id, ingredientId);
-
-    if (result.success) {
+      // ❌ Rollback state if API fails
       setInventory((prevInventory) => {
         const updatedInventory = { ...prevInventory };
-        updatedInventory[categoryId] = [
-          ...(updatedInventory[categoryId] || []),
-          {
-            id: ingredientId,
-            name: ingredientName,
-            quantity: 1,
-            unit: { id: 0, name: "", abbreviation: "" },
-            categoryId: categoryId,
-          },
-        ];
+
+        Object.keys(updatedInventory).forEach((categoryId) => {
+          updatedInventory[Number(categoryId)] = updatedInventory[
+            Number(categoryId)
+          ].map((item) =>
+            item.id === ingredientId
+              ? { ...item, quantity: item.quantity - change } // Revert change
+              : item
+          );
+        });
+
         return updatedInventory;
       });
     }
   };
+
+
+const handleAddIngredient = async (
+  categoryId: number,
+  ingredientId: number
+) => {
+  if (!user?.id) return;
+
+  const result: { success: boolean; message?: string } = await addIngredientToInventory(user.id, ingredientId);
+
+  if (result.success) {
+    // ✅ Fetch full ingredient details after adding
+    const newIngredient = await getIngredientById(ingredientId);
+
+    setInventory((prevInventory) => {
+      const updatedInventory = { ...prevInventory };
+      updatedInventory[categoryId] = [
+        ...(updatedInventory[categoryId] || []),
+        {
+          ...newIngredient,
+          quantity: 1, // or any default quantity
+          categoryId: categoryId,
+        },
+      ];
+      return updatedInventory;
+    });
+  } else {
+    alert("Error adding ingredient: " + result.message);
+  }
+};
+
 
   return (
     <div className="inv-container-main">

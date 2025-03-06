@@ -306,6 +306,69 @@ export async function addIngredientToInventory(
   return { success: true };
 }
 
+// ✅ Update Inventory Quantity
+export async function updateInventoryQuantity(
+  userId: string,
+  ingredientId: number,
+  change: number
+) {
+  // Get the user's inventory ID
+  const userInv = await db
+    .select({ id: userInventory.id })
+    .from(userInventory)
+    .where(eq(userInventory.userId, userId))
+    .limit(1);
+
+  if (!userInv || userInv.length === 0) {
+    throw new Error("User inventory not found");
+  }
+
+  const inventoryId = userInv[0].id;
+
+  // Check if the ingredient exists in the user's inventory
+  const existingIngredient = await db
+    .select({ quantity: userInventoryIngredient.quantity })
+    .from(userInventoryIngredient)
+    .where(
+      and(
+        eq(userInventoryIngredient.inventoryId, inventoryId),
+        eq(userInventoryIngredient.ingredientId, ingredientId)
+      )
+    )
+    .limit(1);
+
+  if (existingIngredient.length === 0) {
+    throw new Error("Ingredient not found in inventory");
+  }
+
+  const newQuantity = existingIngredient[0].quantity + change;
+
+  if (newQuantity <= 0) {
+    // ✅ If quantity drops to 0, remove from inventory
+    await db
+      .delete(userInventoryIngredient)
+      .where(
+        and(
+          eq(userInventoryIngredient.inventoryId, inventoryId),
+          eq(userInventoryIngredient.ingredientId, ingredientId)
+        )
+      );
+  } else {
+    // ✅ Update ingredient quantity
+    await db
+      .update(userInventoryIngredient)
+      .set({ quantity: newQuantity })
+      .where(
+        and(
+          eq(userInventoryIngredient.inventoryId, inventoryId),
+          eq(userInventoryIngredient.ingredientId, ingredientId)
+        )
+      );
+  }
+
+  return { success: true, newQuantity };
+}
+
 
 // CREATE INVENTORY
 // GET INVENTORY BY CATEGORY
