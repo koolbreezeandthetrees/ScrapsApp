@@ -1,0 +1,42 @@
+{
+  "name": "scraps-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "@clerk/elements": "^0.22.5",
+    "@clerk/nextjs": "^6.9.6",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fontsource/inconsolata": "^5.1.1",
+    "@mui/joy": "^5.0.0-beta.51",
+    "clean": "^4.0.2",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.40.0",
+    "lucide-react": "^0.469.0",
+    "next": "15.1.3",
+    "pg": "^8.13.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^20",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.30.5",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5"
+  }
+}

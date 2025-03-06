@@ -1,0 +1,1 @@
+ALTER TABLE "unit" ALTER COLUMN "abbreviation" SET NOT NULL;
