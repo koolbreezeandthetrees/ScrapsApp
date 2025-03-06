@@ -108,7 +108,6 @@ export default function InventoryPage() {
 
   return (
     <div className="inv-container-main">
-      <h1>Your Inventory</h1>
       {hasInventory === null ? (
         <p>Loading...</p>
       ) : hasInventory ? (
