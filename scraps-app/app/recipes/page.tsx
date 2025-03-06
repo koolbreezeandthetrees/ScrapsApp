@@ -1,19 +1,13 @@
 // app/recipes/page.tsx
-
-import { sql } from "drizzle-orm";
-import { db } from "@/db";
+import { getAllRecipeCategories, getAllRecipes } from "./actions";
+import RecipesClient from "./RecipesClient";
 
 export default async function RecipesPage() {
-  const result = await db.execute(sql`SELECT current_database()`)
-  console.log(result)
-  return (
-    <div>
+  // Fetch categories
+  const categories = await getAllRecipeCategories();
 
-      <h1>Recipes</h1>
-     
-      
-      {JSON.stringify(result)}
+  // Fetch all recipes
+  const recipes = await getAllRecipes();
 
-    </div>
-  );
+  return <RecipesClient categories={categories} recipes={recipes} />;
 }

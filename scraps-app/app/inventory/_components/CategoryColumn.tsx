@@ -77,7 +77,7 @@ export default function CategoryColumn({
             </ul>
           ) : (
             <div className="inv-empty-message">
-              <p>No ingredients yet.</p>
+              <p></p>
             </div>
           )}
         </div>
