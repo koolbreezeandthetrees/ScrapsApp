@@ -75,3 +75,15 @@ export interface InventoryItem {
   unit: Unit;
   categoryId: number;
 }
+
+export interface FullRecipe {
+  id: number;
+  title: string;
+  method: string;
+  difficultyLevel: string;
+  time: number;
+  image?: string;
+  category: CategoryRecipe;
+  servings: number;
+  ingredients: RecipeIngredient[];
+}

@@ -1,9 +1,7 @@
-// app/recipes/_components/AddRecipeForm.tsx
 "use client";
 
 import { FormEvent } from "react";
-// If you want to call createRecipe as a server action:
-import { createRecipe } from "../actions";
+import { createRecipe } from "@/app/actions";
 
 interface AddRecipeFormProps {
   visible: boolean;
@@ -13,12 +11,14 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    // Example of calling your server action directly:
+
     const result = await createRecipe(formData);
 
-    if (result.success) {
+    if (result?.success) {
       alert(`Recipe created with ID = ${result.recipeId}`);
-      // You might want to refresh the page or close the form, etc.
+      // Possibly refresh the page or hide the form
+    } else {
+      alert("Failed to create recipe.");
     }
   }
 
@@ -29,41 +29,36 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
       style={{ display: visible ? "block" : "none" }}
     >
       <h3>Add New Recipe</h3>
-
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        {/* Title Field */}
+        {/* Title */}
         <div className="form-input-item">
           <label htmlFor="title">Title</label>
           <input type="text" name="title" id="title" required />
         </div>
 
-        {/* Method Field */}
+        {/* Method */}
         <div className="form-input-item">
           <label htmlFor="method">Method</label>
           <textarea name="method" id="method" required />
         </div>
 
-        {/* Category Field (from category_recipe) */}
+        {/* Category */}
         <div className="form-input-item">
-          <label htmlFor="category_id" className="form-label">
-            Category
-          </label>
+          <label htmlFor="category_id">Category</label>
           <select name="category_id" id="category_id" required defaultValue="">
-            <option value="" disabled selected>
+            <option value="" disabled>
               Select a category
             </option>
-            {/* If you want to pass categories from the parent, do so and map them here */}
+            {/* TODO: pass real categories as props and .map them */}
           </select>
         </div>
 
         <div className="form-input-item-horizontal">
           {/* Difficulty */}
           <div className="form-input-item">
-            <label htmlFor="difficulty" className="form-label">
-              Difficulty
-            </label>
+            <label htmlFor="difficulty">Difficulty</label>
             <select name="difficulty" id="difficulty" required defaultValue="">
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Select difficulty
               </option>
               <option value="low">Low</option>
@@ -74,11 +69,9 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
 
           {/* Servings */}
           <div className="form-input-item">
-            <label htmlFor="servings" className="form-label">
-              Servings
-            </label>
+            <label htmlFor="servings">Servings</label>
             <select name="servings" id="servings" required defaultValue="">
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Select servings
               </option>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -91,17 +84,9 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
 
           {/* Time */}
           <div className="form-input-item">
-            <label htmlFor="time" className="form-label">
-              Time (minutes)
-            </label>
-            <select
-              className="form-control"
-              name="time"
-              id="time"
-              required
-              defaultValue=""
-            >
-              <option value="" disabled selected>
+            <label htmlFor="time">Time (minutes)</label>
+            <select name="time" id="time" required defaultValue="">
+              <option value="" disabled>
                 Select time
               </option>
               {[1, 5, 10, 15, 30, 60, 90, 120].map((t) => (
@@ -115,80 +100,48 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
 
         {/* Image Upload */}
         <div className="form-input-item">
-          <label htmlFor="image" className="form-label">
-            Upload Image
-          </label>
-          <input
-            type="file"
-            className="form-control"
-            name="image"
-            id="image"
-            accept="image/*"
-          />
+          <label htmlFor="image">Upload Image</label>
+          <input type="file" name="image" id="image" accept="image/*" />
         </div>
 
-        {/* Ingredients (Optional) */}
+        {/* Ingredients (optional, not handled in createRecipe yet) */}
         <div id="ingredient-list">
-          <div className="form-input-item">
-            <label htmlFor="ingredients" className="form-label">
-              Ingredient
-            </label>
-            <div className="form-input-item-horizontal">
-              <div className="form-input-item">
-                <label htmlFor="ingredients" className="form-label">
-                  Ingredients
-                </label>
-                <select name="ingredients[]" required defaultValue="">
-                  <option value="" disabled selected>
-                    Select an ingredient
-                  </option>
-                  {/* If you want to pass an ingredient list as props, map it here */}
-                </select>
-              </div>
+          <label>Ingredients (Optional)</label>
+          {/* 
+             If you want to actually store these, 
+             read them in createRecipe (using formData.getAll("ingredients[]"))
+             and do inserts into `recipeIngredient`.
+          */}
+          <select name="ingredients[]" required defaultValue="">
+            <option value="" disabled>
+              Select an ingredient
+            </option>
+            {/* TODO: map real ingredients here */}
+          </select>
 
-              <div className="form-input-item">
-                <label htmlFor="quantities" className="form-label">
-                  Quantity
-                </label>
-                <select name="quantities[]" required defaultValue="">
-                  <option value="1">1</option>
-                  <option value="0.25">1/4</option>
-                  <option value="0.5">1/2</option>
-                  <option value="1.5">1 1/2</option>
-                  <option value="2">2</option>
-                </select>
-              </div>
+          <select name="quantities[]" required defaultValue="">
+            <option value="1">1</option>
+            <option value="0.25">1/4</option>
+            <option value="0.5">1/2</option>
+          </select>
 
-              <div className="form-input-item">
-                <label htmlFor="units" className="form-label">
-                  Unit
-                </label>
-                <select name="units[]" required defaultValue="">
-                  <option value="" disabled selected>
-                    Select a unit
-                  </option>
-                  {/* Similarly, map your units here if you'd like */}
-                </select>
-              </div>
-            </div>
-          </div>
+          <select name="units[]" required defaultValue="">
+            <option value="" disabled>
+              Select a unit
+            </option>
+            {/* TODO: map real units here */}
+          </select>
         </div>
 
         {/* + Add Another Ingredient Button */}
-        <div className="button-container">
-          <button
-            type="button"
-            id="add-ingredient"
-            className="float-right small-btn grow-element-slow"
-            onClick={() => {
-              alert("TODO: Implement dynamic fields in React!");
-            }}
-          >
-            + Add Another Ingredient
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => alert("Implement dynamic fields in React if needed")}
+        >
+          + Add Another Ingredient
+        </button>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button type="submit" className="button">
           + Add Recipe
         </button>

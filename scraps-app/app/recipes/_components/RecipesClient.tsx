@@ -1,52 +1,54 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { FullRecipe } from "./actions";
-import AddRecipeForm from "./_components/AddRecipeForm";
-import { CategoryRecipe } from "@/types/types";
+import AddRecipeForm from "./AddRecipeForm";
+import { CategoryRecipe, FullRecipe } from "@/types/types";
 
 interface RecipesClientProps {
   categories: CategoryRecipe[];
   recipes: FullRecipe[];
 }
-/**
- * We receive categories & recipes (already loaded from the DB).
- */
-export default function RecipesClient({ categories, recipes }: RecipesClientProps) {
 
-  // Selected category and recipe state
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+export default function RecipesClient({
+  categories,
+  recipes,
+}: RecipesClientProps) {
+  const router = useRouter();
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
   const [selectedRecipe, setSelectedRecipe] = useState<FullRecipe | null>(null);
-
-  // Show the "Add Recipe" form state
   const [showAddForm, setShowAddForm] = useState(false);
 
-  // Filter the recipes by the selected category
+  // Filter recipes by selected category
   const filteredRecipes = useMemo(() => {
     if (selectedCategoryId == null) return [];
     return recipes.filter((r) => r.category.id === selectedCategoryId);
   }, [selectedCategoryId, recipes]);
 
-  // Handle category click
   function handleCategoryClick(catId: number) {
     setSelectedCategoryId(catId);
     setSelectedRecipe(null);
   }
 
-  // Handle recipe click
   function handleRecipeClick(recipe: FullRecipe) {
     setSelectedRecipe(recipe);
   }
 
-  // Toggle form
+  function handleEditClick(recipeId: number) {
+    router.push(`/recipes/${recipeId}/edit`);
+  }
+
   function toggleAddForm() {
     setShowAddForm((prev) => !prev);
   }
 
   return (
     <div className="recipe-container-lists">
-      {/* ====== Column 1: Categories ====== */}
+      {/* Column 1: Categories */}
       <div className="row-cat">
         <ul className="row-cat-list">
           {categories.map((cat) => (
@@ -66,7 +68,7 @@ export default function RecipesClient({ categories, recipes }: RecipesClientProp
         </ul>
       </div>
 
-      {/* ====== Column 2: Recipe List ====== */}
+      {/* Column 2: Recipe List */}
       <div className="row-recipe">
         <div id="recipe-list">
           {selectedCategoryId == null ? (
@@ -93,7 +95,7 @@ export default function RecipesClient({ categories, recipes }: RecipesClientProp
         </div>
       </div>
 
-      {/* ====== Column 3: Recipe Details ====== */}
+      {/* Column 3: Recipe Details */}
       <div className="row-detail">
         <div id="recipe-details" className="recipe-details">
           {selectedRecipe && (
@@ -125,39 +127,35 @@ export default function RecipesClient({ categories, recipes }: RecipesClientProp
                 <ul>
                   {selectedRecipe.ingredients.map((ing, idx) => (
                     <li key={idx} className="grey-list">
-                      {ing.quantityNeeded} {ing.unit.abbreviation} {ing.name}
+                      {ing.quantityNeeded} {ing.unit.abbreviation}{" "}
+                      {ing.ingredient.name}
                     </li>
                   ))}
                 </ul>
               </div>
 
-              {/* <div className="details-item recipe-image">
-                {selectedRecipe.image && (
-                  <img
-                    src={`/static/uploads/${selectedRecipe.image}`}
-                    alt={`${selectedRecipe.title} Image`}
-                  />
-                )}
-              </div> */}
-
-              {/* Example "Edit" link with a pencil icon */}
-              <div className="pencil-icon-container">
-                  <Image
-                    src="/icons/edit.svg"
-                    alt="Edit Recipe Icon"
-                    width={15}
-                    height={15}
-                  />
+              {/* Edit icon => go to Edit page */}
+              <div
+                className="pencil-icon-container"
+                onClick={() => handleEditClick(selectedRecipe.id)}
+              >
+                <Image
+                  src="/icons/edit.svg"
+                  alt="Edit Recipe Icon"
+                  width={15}
+                  height={15}
+                  className="clickable"
+                />
               </div>
             </>
           )}
         </div>
       </div>
 
-      {/* ====== Add New Recipe Form (hidden by default) ====== */}
+      {/* Add New Recipe Form (hidden by default) */}
       <AddRecipeForm visible={showAddForm} />
 
-      {/* Floating button to toggle form visibility */}
+      {/* Floating button to toggle form */}
       <button
         id="toggle-form-btn"
         className="floating-btn"
