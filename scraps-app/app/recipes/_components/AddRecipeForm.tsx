@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
-import { createRecipe } from "@/app/actions";
+import { createRecipe } from "@/app/actions/recipes";
 
 interface AddRecipeFormProps {
   visible: boolean;

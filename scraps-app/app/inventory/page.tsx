@@ -6,10 +6,10 @@ import {
   addIngredientToInventory,
   checkInventory,
   createInventory,
-  getIngredientById,
   getInventory,
   updateInventoryQuantity,
-} from "../actions";
+} from "@/app/actions/inventory";
+import { getIngredientById } from "@/app/actions/ingredients";
 import IngredientForm from "./_components/IngredientForm";
 import CategoryColumn from "./_components/CategoryColumn";
 import { CategoryIngredient, InventoryItem } from "@/types/types";

@@ -6,10 +6,9 @@ import {
   updateRecipe,
   updateRecipeIngredients,
   getRecipeById,
-  getCategoryIngredientList,
-  getUnitList,
-  getAllIngredients,
-} from "@/app/actions";
+} from "@/app/actions/recipes";
+import { getAllIngredients } from "@/app/actions/ingredients";
+import { getUnitList, getCategoryIngredientList} from "@/app/actions/common";
 import {
   CategoryRecipe,
   Unit,
@@ -18,9 +17,12 @@ import {
   FullRecipe,
 } from "@/types/types";
 
-export default function EditRecipePage({ params }: { params: { id: string } }) {
+import { useParams } from "next/navigation";
+
+export default function EditRecipePage() {
+  const params = useParams(); 
+  const recipeId = parseInt(params.id as string, 10);
   const router = useRouter();
-  const recipeId = parseInt(params.id, 10);
 
   // State
   const [recipe, setRecipe] = useState<FullRecipe | null>(null);
