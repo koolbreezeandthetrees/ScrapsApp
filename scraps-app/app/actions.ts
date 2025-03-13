@@ -26,12 +26,14 @@ export async function getCategoryIngredientList() {
     .select({
       id: categoryIngredient.id,
       name: categoryIngredient.name,
+      description: categoryIngredient.description, 
     })
     .from(categoryIngredient)
     .orderBy(categoryIngredient.name);
 
   return results;
 }
+
 export async function getColorList() {
   const results = await db
     .select({
@@ -116,8 +118,6 @@ export async function createIngredient(formData: FormData) {
   const color = parseFloat(String(formData.get("color")));
   const category = parseFloat(String(formData.get("category")));
 
-  console.log("formData", formData);
-
   const results = await db
     .insert(ingredient)
     .values({
@@ -126,12 +126,11 @@ export async function createIngredient(formData: FormData) {
       colorId: color,
       categoryIngredientId: category,
     })
-    .returning({
-      id: ingredient.id,
-    });
+    .returning({ id: ingredient.id });
 
-  redirect(`/ingredients/${results[0].id}`);
+  return results[0]?.id; 
 }
+
 // UPDATE INGREDIENT
 export async function updateIngredient(id: number, formData: FormData) {
   const name = formData.get("name") as string;

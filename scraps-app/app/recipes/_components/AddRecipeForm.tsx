@@ -48,7 +48,7 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
           <label htmlFor="category_id" className="form-label">
             Category
           </label>
-          <select name="category_id" id="category_id" required>
+          <select name="category_id" id="category_id" required defaultValue="">
             <option value="" disabled selected>
               Select a category
             </option>
@@ -62,7 +62,7 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
             <label htmlFor="difficulty" className="form-label">
               Difficulty
             </label>
-            <select name="difficulty" id="difficulty" required>
+            <select name="difficulty" id="difficulty" required defaultValue="">
               <option value="" disabled selected>
                 Select difficulty
               </option>
@@ -77,7 +77,7 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
             <label htmlFor="servings" className="form-label">
               Servings
             </label>
-            <select name="servings" id="servings" required>
+            <select name="servings" id="servings" required defaultValue="">
               <option value="" disabled selected>
                 Select servings
               </option>
@@ -94,7 +94,13 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
             <label htmlFor="time" className="form-label">
               Time (minutes)
             </label>
-            <select className="form-control" name="time" id="time" required>
+            <select
+              className="form-control"
+              name="time"
+              id="time"
+              required
+              defaultValue=""
+            >
               <option value="" disabled selected>
                 Select time
               </option>
@@ -132,7 +138,7 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
                 <label htmlFor="ingredients" className="form-label">
                   Ingredients
                 </label>
-                <select name="ingredients[]" required>
+                <select name="ingredients[]" required defaultValue="">
                   <option value="" disabled selected>
                     Select an ingredient
                   </option>
@@ -144,7 +150,7 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
                 <label htmlFor="quantities" className="form-label">
                   Quantity
                 </label>
-                <select name="quantities[]" required>
+                <select name="quantities[]" required defaultValue="">
                   <option value="1">1</option>
                   <option value="0.25">1/4</option>
                   <option value="0.5">1/2</option>
@@ -157,7 +163,7 @@ export default function AddRecipeForm({ visible }: AddRecipeFormProps) {
                 <label htmlFor="units" className="form-label">
                   Unit
                 </label>
-                <select name="units[]" required>
+                <select name="units[]" required defaultValue="">
                   <option value="" disabled selected>
                     Select a unit
                   </option>

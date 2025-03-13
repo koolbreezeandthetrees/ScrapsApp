@@ -53,7 +53,10 @@ export default function CategoryColumn({
 
   return (
     <div className="inv-list-col">
+      
+      {/* TOP */}
       <div className="inv-list-top">
+        {/* Category col list title */}
         <div className="inv-list-top-title">
           <Image
             src={`/icons/${category.name.replace(" ", "_")}.svg`}
@@ -64,6 +67,9 @@ export default function CategoryColumn({
           />
           <h3>{category.name}</h3>
         </div>
+
+        {/* MIDDLE */}
+        {/* Current inventory list */}
         <div className="inv-list-top-list">
           {inventory.length > 0 ? (
             <ul>
@@ -82,7 +88,8 @@ export default function CategoryColumn({
           )}
         </div>
       </div>
-
+      {/* BOTTOM */}
+      {/* Toggle  color button */}
       <button
         className="inv-list-toggle grow-element-normal"
         onClick={() => setShowAddSection(!showAddSection)}
@@ -90,14 +97,18 @@ export default function CategoryColumn({
       >
         {showAddSection ? `▲ Add to ${category.name}` : `▼ Add to ${category.name}`}
       </button>
-
+      {/* Color + Ingrdient container */}
       {showAddSection && availableColors.length > 0 && (
         <div className="inv-list-bottom-wrapper">
+
+          {/* Dot filters */}
           <ColorFilter
             categoryId={category.id}
             colors={availableColors}
             onFilterAction={handleFilter}
           />
+
+          {/* Add ingredients  */}
           <div className="inv-list-bottom-filt-ing">
             <h5>Select ingredient:</h5>
             {filteredIngredients.length > 0 && (
@@ -108,6 +119,7 @@ export default function CategoryColumn({
                     className="inv-list-bottom-filt-ing-item"
                   >
                     {ingredient.name}
+                    {/* Add button */}
                     <button
                       className="ing-filt-btn small-btn grow-element-slow"
                       onClick={() =>
@@ -116,7 +128,7 @@ export default function CategoryColumn({
                           ingredient.id,
                           ingredient.name
                         )
-                      } // ✅ Use parent function
+                      }
                     >
                       +
                     </button>

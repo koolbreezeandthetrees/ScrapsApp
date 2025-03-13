@@ -21,7 +21,7 @@ export default function InventoryPage() {
   const [inventory, setInventory] = useState<{
     [key: number]: InventoryItem[];
   }>({});
-  const [showIngredientForm, setShowIngredientForm] = useState(false); // ✅ State for toggling form
+  const [showIngredientForm, setShowIngredientForm] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -33,7 +33,7 @@ export default function InventoryPage() {
       if (exists) {
         if (!user) return;
         const data = await getInventory(user.id);
-        setCategories([...data.categories].sort((a, b) => a.id - b.id)); // Sort categories by ID
+        setCategories([...data.categories].sort((a, b) => a.id - b.id));
         setInventory(data.inventory);
       }
     }
@@ -56,11 +56,13 @@ export default function InventoryPage() {
       Object.keys(updatedInventory).forEach((categoryId) => {
         updatedInventory[Number(categoryId)] = updatedInventory[
           Number(categoryId)
-        ].map((item) =>
-          item.id === ingredientId
-            ? { ...item, quantity: item.quantity + change }
-            : item
-        );
+        ]
+          .map((item) =>
+            item.id === ingredientId
+              ? { ...item, quantity: item.quantity + change }
+              : item
+          )
+          .filter((item) => item.quantity > 0); // ✅ Remove items with zero quantity
       });
       return updatedInventory;
     });
@@ -80,11 +82,13 @@ export default function InventoryPage() {
         Object.keys(rolledBackInventory).forEach((categoryId) => {
           rolledBackInventory[Number(categoryId)] = rolledBackInventory[
             Number(categoryId)
-          ].map((item) =>
-            item.id === ingredientId
-              ? { ...item, quantity: item.quantity - change }
-              : item
-          );
+          ]
+            .map((item) =>
+              item.id === ingredientId
+                ? { ...item, quantity: item.quantity - change }
+                : item
+            )
+            .filter((item) => item.quantity > 0); // ✅ Ensure rollback also removes zero-quantity items
         });
         return rolledBackInventory;
       });
@@ -97,19 +101,38 @@ export default function InventoryPage() {
   ) => {
     if (!user?.id) return;
 
-    const result: { success: boolean; message?: string } = await addIngredientToInventory(user.id, ingredientId);
+    const result = await addIngredientToInventory(user.id, ingredientId);
     if (result.success) {
       const newIngredient = await getIngredientById(ingredientId);
+
       setInventory((prevInventory) => {
         const updatedInventory = { ...prevInventory };
-        updatedInventory[categoryId] = [
-          ...(updatedInventory[categoryId] || []),
-          { ...newIngredient, quantity: 1, categoryId },
-        ];
+
+        const existingItem = updatedInventory[categoryId]?.find(
+          (item) => item.id === ingredientId
+        );
+
+        if (existingItem) {
+          // ✅ If ingredient exists, increase quantity
+          updatedInventory[categoryId] = updatedInventory[categoryId].map(
+            (item) =>
+              item.id === ingredientId
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+          );
+        } else {
+          // ✅ Otherwise, add new ingredient
+          updatedInventory[categoryId] = [
+            ...(updatedInventory[categoryId] || []),
+            { ...newIngredient, quantity: 1, categoryId },
+          ];
+        }
+
         return updatedInventory;
       });
     } else {
-      alert("Error adding ingredient: " + (result.message || "Unknown error"));
+      const errorMessage = 'message' in result ? result.message : "Unknown error";
+      alert("Error adding ingredient: " + errorMessage);
     }
   };
 

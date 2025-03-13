@@ -6,25 +6,20 @@ import { FullRecipe } from "./actions";
 import AddRecipeForm from "./_components/AddRecipeForm";
 import { CategoryRecipe } from "@/types/types";
 
+interface RecipesClientProps {
+  categories: CategoryRecipe[];
+  recipes: FullRecipe[];
+}
 /**
  * We receive categories & recipes (already loaded from the DB).
  */
-export default function RecipesClient({
-  categories,
-  recipes,
-}: {
-  categories: CategoryRecipe[];
-  recipes: FullRecipe[];
-}) {
-  // Currently selected category
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
-  );
+export default function RecipesClient({ categories, recipes }: RecipesClientProps) {
 
-  // Currently selected recipe
+  // Selected category and recipe state
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<FullRecipe | null>(null);
 
-  // Whether to show the "Add Recipe" form
+  // Show the "Add Recipe" form state
   const [showAddForm, setShowAddForm] = useState(false);
 
   // Filter the recipes by the selected category
