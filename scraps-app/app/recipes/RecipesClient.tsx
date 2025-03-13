@@ -102,7 +102,6 @@ export default function RecipesClient({
                 <h3>Method:</h3>
                 <p>{selectedRecipe.method}</p>
               </div>
-              
               {/* Ingredients */}
               <div className="details-item">
                 <h3>Ingredients:</h3>
