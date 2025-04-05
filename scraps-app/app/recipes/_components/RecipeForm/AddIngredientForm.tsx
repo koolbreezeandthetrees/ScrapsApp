@@ -30,7 +30,7 @@ export default function AddIngredientForm({
 
   return (
     <div className="ingredient-add-section">
-      <h4 className="form-heading">Add Ingredient</h4>
+      {/* <h4 className="form-heading">Add Ingredient</h4> */}
       <div className="form-columns">
         {/* Left Column - Autocomplete */}
         <div className="form-column">

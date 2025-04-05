@@ -9,6 +9,8 @@ import {
   Unit,
 } from "@/types/types";
 import AddIngredientForm from "./AddIngredientForm";
+import { IconButton, List, ListItem, Stack } from "@mui/material"; 
+import CloseIcon from "@mui/icons-material/Close";
 
 type RecipeFormProps = {
   formData: {
@@ -79,7 +81,7 @@ export function RecipeForm({
         <label htmlFor="difficultyLevel">Difficulty</label>
         <SelectableRow
           name="difficultyLevel"
-          options={["Easy", "Medium", "Hard"]}
+          options={["easy", "medium", "hard"]}
           selected={formData.difficultyLevel}
           onSelect={(value) =>
             setFormData((prev) => ({ ...prev, difficultyLevel: value }))
@@ -99,7 +101,7 @@ export function RecipeForm({
         <label htmlFor="servings">Servings</label>
         <SelectableRow
           name="servings"
-          options={[1, 2, 4, 6, 8]}
+          options={[1, 2, 3, 4, 5, 6, 7, 8]}
           selected={formData.servings}
           onSelect={(value) =>
             setFormData((prev) => ({ ...prev, servings: value }))
@@ -133,43 +135,42 @@ export function RecipeForm({
             }))
           }
         />
-
-        <label htmlFor="image_url">Image</label>
-        <input type="hidden" name="image_url" value={imageUrl} />
-        {imageUrl && (
-          <Image src={imageUrl} alt="Recipe" height={400} width={400} />
-        )}
-        <UploadButton
-          endpoint="imageUploader"
-          onClientUploadComplete={(res) => {
-            const uploadedUrl = res?.[0]?.ufsUrl;
-            if (uploadedUrl) setImageUrl(uploadedUrl);
-            else alert("Upload failed: No URL returned");
-          }}
-          onUploadError={(error: Error) => {
-            alert(`ERROR! ${error.message}`);
-          }}
-        />
-
-        <h3>Ingredients</h3>
+        <label>Ingredients</label>
         {recipeIngredients.length > 0 ? (
-          <ul>
+          <List>
             {recipeIngredients.map((ri) => (
-              <li key={ri.id}>
-                {ri.quantityNeeded} {ri.unit.abbreviation} {ri.ingredient.name}
-                <button
-                  type="button"
+              <ListItem
+                key={ri.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  pl: 4,
+                  pr: 0,
+                  py: 0.2,
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.05)",
+                    borderRadius: "8px", // optional: rounded corners
+                  },
+                }}
+              >
+                <span>
+                  {ri.quantityNeeded} {ri.unit.abbreviation}{" "}
+                  {ri.ingredient.name}
+                </span>
+                <IconButton
+                  size="small"
+                  color="error"
                   onClick={() => onRemoveIngredient(ri.ingredient.id)}
                 >
-                  Remove
-                </button>
-              </li>
+                  <CloseIcon />
+                </IconButton>
+              </ListItem>
             ))}
-          </ul>
+          </List>
         ) : (
           <p>No ingredients added.</p>
         )}
-
         <AddIngredientForm
           ingredients={ingredients}
           units={units}
@@ -180,6 +181,30 @@ export function RecipeForm({
             }
           }}
         />
+
+        <label htmlFor="image_url">Image</label>
+        <Stack alignItems="start">
+          <input type="hidden" name="image_url" value={imageUrl} />
+          {imageUrl && (
+            <Image src={imageUrl} alt="Recipe" height={500} width={500} />
+          )}
+          <UploadButton
+            endpoint="imageUploader"
+            appearance={{
+              container: "flex flex-col gap-2 mt-4",
+              button:
+                "!bg-[#748FB8] hover:!bg-[#48679d] text-white font-semibold py-2 px-4 rounded transition duration-200",
+            }}
+            onClientUploadComplete={(res) => {
+              const uploadedUrl = res?.[0]?.ufsUrl;
+              if (uploadedUrl) setImageUrl(uploadedUrl);
+              else alert("Upload failed: No URL returned");
+            }}
+            onUploadError={(error: Error) => {
+              alert(`ERROR! ${error.message}`);
+            }}
+          />
+        </Stack>
 
         <button type="submit">{submitLabel}</button>
       </div>

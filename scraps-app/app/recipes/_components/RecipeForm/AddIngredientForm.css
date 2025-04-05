@@ -9,9 +9,6 @@
   min-width: 250px;
 }
 
-.ingredient-add-section {
-  margin-top: 1rem;
-}
 
 .form-heading {
   margin-bottom: 0.5rem;
@@ -88,8 +85,7 @@
   height: 30px;
   font-size: 1.5rem;
   border-radius: 50%;
-  border: none;
-  background-color: #748FB8;
+  border: 1px solid #fff;
   color: white;
   display: flex;
   align-items: center;
