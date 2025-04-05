@@ -1,0 +1,103 @@
+.ingredient-manager-row {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.ingredient-list {
+  flex: 1;
+  min-width: 250px;
+}
+
+.ingredient-add-section {
+  margin-top: 1rem;
+}
+
+.form-heading {
+  margin-bottom: 0.5rem;
+}
+
+.form-columns {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  padding: 2rem 1.5rem 1rem 1.5rem;
+}
+
+.form-column {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-column.stacked > div {
+  margin-bottom: 1rem;
+}
+
+.form-input {
+  padding: 0.6rem 1rem; /* increased padding for height */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 1rem;
+  height: 2.2rem; /* optional: explicitly control height */
+}
+
+
+.form-dropdown {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 0.25rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.form-option {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.form-option-active {
+  background-color: #c7b964;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.add-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.add-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.add-button-icon {
+  width: 30px;
+  height: 30px;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  border: none;
+  background-color: #748FB8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.add-button-icon:hover {
+  background-color: #5d81b6;
+}
+
