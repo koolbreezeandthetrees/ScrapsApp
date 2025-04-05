@@ -140,7 +140,7 @@ export function RecipeForm({
           <List>
             {recipeIngredients.map((ri) => (
               <ListItem
-                key={ri.id}
+                key={`recipe-ing${ri.ingredient.id}-${ri.unit.id}`}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",

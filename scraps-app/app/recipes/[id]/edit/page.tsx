@@ -10,7 +10,7 @@ import {
 import { getAllIngredients } from "@/app/actions/ingredients";
 import { getAllRecipeCategories } from "@/app/actions/recipes";
 import { getUnitList } from "@/app/actions/common";
-import { Ingredient, Unit, CategoryRecipe, FullRecipe } from "@/types/types";
+import { Ingredient, Unit, CategoryRecipe } from "@/types/types";
 import { useRecipeForm } from "../../_components/RecipeForm/useRecipeForm";
 import { RecipeForm } from "../../_components/RecipeForm/RecipeForm";
 
@@ -34,56 +34,55 @@ export default function EditRecipePage() {
     handleRemoveIngredient,
   } = useRecipeForm({});
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [recipeData, catData, unitData, ingredientData] =
-          await Promise.all([
-            getRecipeById(recipeId),
-            getAllRecipeCategories(),
-            getUnitList(),
-            getAllIngredients(),
-          ]);
+ useEffect(() => {
+   async function fetchData() {
+     try {
+       const [recipeData, catData, unitData, ingredientData] =
+         await Promise.all([
+           getRecipeById(recipeId),
+           getAllRecipeCategories(),
+           getUnitList(),
+           getAllIngredients(),
+         ]);
 
-        if (!recipeData) {
-          console.error("Recipe not found");
-          return;
-        }
+       if (!recipeData) {
+         console.error("Recipe not found");
+         return;
+       }
 
-        setFormData({
-          title: recipeData.title,
-          method: recipeData.method,
-          difficultyLevel: recipeData.difficultyLevel,
-          time: recipeData.time,
-          servings: recipeData.servings,
-          categoryRecipeId: recipeData.category.id.toString(),
-        });
-        setImageUrl(recipeData.image || "");
-        setCategories(catData);
-        setIngredients(ingredientData);
-        setUnits(unitData);
-        handleResetIngredients(recipeData.ingredients);
-      } catch (err) {
-        console.error("Failed to load recipe data", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [recipeId]);
+       // Set all data before we process ingredients
+       setFormData({
+         title: recipeData.title,
+         method: recipeData.method,
+         difficultyLevel: recipeData.difficultyLevel,
+         time: recipeData.time,
+         servings: recipeData.servings,
+         categoryRecipeId: recipeData.category.id.toString(),
+       });
+       setImageUrl(recipeData.image || "");
+       setCategories(catData);
+       setIngredients(ingredientData);
+       setUnits(unitData);
 
-  function handleResetIngredients(ingList: FullRecipe["ingredients"]) {
-    setTimeout(() => {
-      ingList.forEach((ri) => {
-        handleAddIngredient(
-          ri.ingredient,
-          ri.unit.id,
-          ri.quantityNeeded,
-          units
-        );
-      });
-    }, 0);
-  }
+       // ✅ Now that units are set, we can safely add recipe ingredients
+       recipeData.ingredients.forEach((ri) => {
+         handleAddIngredient(
+           ri.ingredient,
+           ri.unit.id,
+           ri.quantityNeeded,
+           unitData
+         );
+       });
+     } catch (err) {
+       console.error("Failed to load recipe data", err);
+     } finally {
+       setLoading(false);
+     }
+   }
+
+   fetchData();
+ }, [recipeId]);
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -111,7 +110,7 @@ export default function EditRecipePage() {
 
   return (
        <div className="edit-recipe-form-container" id="recipe-form">
-      <h2>Edit Recipe</h2>
+      <h1>Edit Recipe</h1>
       <RecipeForm
         formData={formData}
         setFormData={setFormData}
