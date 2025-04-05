@@ -191,24 +191,20 @@ interface CreateRecipeResult {
   success: boolean;
   recipeId?: number;
 }
+
 export async function createRecipe(
-  formData: FormData
+  formData: FormData,
+  recipeIngredients: RecipeIngredient[]
 ): Promise<CreateRecipeResult> {
   try {
     const title = formData.get("title") as string;
     const method = formData.get("method") as string;
-    const difficulty = formData.get("difficulty") as string;
+    const difficulty = formData.get("difficultyLevel") as string;
     const timeVal = parseInt(String(formData.get("time")), 10);
     const servingsVal = parseInt(String(formData.get("servings")), 10);
-    const categoryVal = parseInt(String(formData.get("category_id")), 10);
+    const categoryVal = parseInt(String(formData.get("categoryRecipeId")), 10);
 
-    // Optional file upload
-    const imageFile = formData.get("image") as File | null;
-    let imageFilename: string | null = null;
-    if (imageFile && imageFile.size > 0) {
-      // Save or upload the file
-      imageFilename = "placeholder.jpg";
-    }
+    const imageUrl = formData.get("image_url") as string | null;
 
     // Insert into "recipe" table
     const [newRecipe] = await db
@@ -220,22 +216,31 @@ export async function createRecipe(
         time: timeVal,
         servings: servingsVal,
         categoryRecipeId: categoryVal,
-        image: imageFilename,
+        image: imageUrl ?? null,
       })
       .returning({ id: recipe.id });
 
-    // TODO: If you want to handle recipe ingredients from formData:
-    // const ingIds = formData.getAll("ingredients[]");
-    // const qtys = formData.getAll("quantities[]");
-    // const units = formData.getAll("units[]");
-    // ...then insert each row in recipeIngredient.
+    const recipeId = newRecipe.id;
 
-    return { success: true, recipeId: newRecipe.id };
+    // Insert recipe ingredients
+    if (recipeIngredients.length > 0) {
+      await db.insert(recipeIngredient).values(
+        recipeIngredients.map((ing) => ({
+          recipeId,
+          ingredientId: ing.ingredient.id,
+          unitId: ing.unit.id,
+          quantityNeeded: ing.quantityNeeded,
+        }))
+      );
+    }
+
+    return { success: true, recipeId };
   } catch (error) {
     console.error("Error creating recipe:", error);
     return { success: false };
   }
 }
+
 
 // =============== UPDATE RECIPE ===============
 export async function updateRecipe(recipeId: number, data: FormData) {

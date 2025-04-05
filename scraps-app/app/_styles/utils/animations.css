@@ -1,0 +1,21 @@
+.grow-element-slow {
+  transition: transform 1.1s ease;
+}
+
+.grow-element-slow:hover {
+  transform: scale(1.1);
+}
+
+.small-btn.grow-element-slow:hover,
+.smaller-btn.grow-element-slow:hover {
+  transform: scale(1.4);
+  color: #E4DC42;
+}
+
+.grow-element-normal {
+  transition: transform 0.8s ease;
+}
+
+.grow-element-normal:hover {
+  transform: scale(1.05);
+}

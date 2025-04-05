@@ -1,10 +1,13 @@
+"use client";
 import {
   ClerkProvider
 } from "@clerk/nextjs";
-import "./globals.css";
+import "./_styles/globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "@uploadthing/react/styles.css";
+import theme from "@/theme";
+import { ThemeProvider } from "@emotion/react";
 
 // TODO move header more down the children tree
 
@@ -15,14 +18,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-
+      <ThemeProvider theme={theme}>
+        <html lang="en">
           <body>
             <Header />
-            {children}
+            <div className="container">{children}</div>
+
             <Footer />
           </body>
         </html>
+      </ThemeProvider>
     </ClerkProvider>
   );
 }

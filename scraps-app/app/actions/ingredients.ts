@@ -9,6 +9,7 @@ import {
   color,
 } from "@/db/migrations/schema";
 import { Ingredient } from "@/types/types";
+import { redirect } from "next/navigation";
 
 // =============== GET: ALL INGREDIENTS ===============
 export async function getAllIngredients(): Promise<Ingredient[]> {
@@ -74,4 +75,75 @@ export async function getIngredientById(id: number) {
     .limit(1);
 
   return result[0];
+}
+
+export async function getIngredientsByCategory() {
+  const result = await db
+    .select({
+      ingredientId: ingredient.id,
+      ingredientName: ingredient.name,
+      ingredientUnitId: ingredient.unitId,
+      ingredientColorId: ingredient.colorId,
+      categoryId: categoryIngredient.id,
+      categoryName: categoryIngredient.name,
+    })
+    .from(ingredient)
+    .leftJoin(
+      categoryIngredient,
+      eq(ingredient.categoryIngredientId, categoryIngredient.id)
+    )
+    .orderBy(categoryIngredient.name, ingredient.name);
+
+  return result;
+}
+
+// CREATE INGREDIENT
+export async function createIngredient(formData: FormData) {
+  const name = formData.get("name") as string;
+  const unitVal = parseFloat(String(formData.get("unit")));
+  const colorVal = parseFloat(String(formData.get("color")));
+  const categoryVal = parseFloat(String(formData.get("category")));
+
+  const results = await db
+    .insert(ingredient)
+    .values({
+      name,
+      unitId: unitVal,
+      colorId: colorVal,
+      categoryIngredientId: categoryVal,
+    })
+    .returning({ id: ingredient.id });
+
+  return results[0]?.id;
+}
+
+// UPDATE INGREDIENT
+export async function updateIngredient(id: number, formData: FormData) {
+  const name = formData.get("name") as string;
+  const unitId = parseInt(String(formData.get("unit")), 10);
+  const colorId = parseInt(String(formData.get("color")), 10);
+  const categoryIngredientId = parseInt(String(formData.get("category")), 10);
+
+  await db
+    .update(ingredient)
+    .set({
+      name,
+      unitId,
+      colorId,
+      categoryIngredientId,
+    })
+    .where(eq(ingredient.id, id));
+
+  // For immediate redirect after update:
+  redirect(`/ingredients`);
+}
+
+export async function getIngredientPlainById(id: number) {
+  const result = await db
+    .select()
+    .from(ingredient)
+    .where(eq(ingredient.id, id))
+    .limit(1);
+
+  return result[0]; // => Possibly undefined if not found
 }

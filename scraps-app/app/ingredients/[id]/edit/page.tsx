@@ -1,44 +1,40 @@
-import {
-  getIngredientPlainById,
-  getUnitList,
-  getCategoryIngredientList,
-  getColorList,
-} from "@/app/actions";
-import EditIngredientForm from "./EditIngredientForm";
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
+// import { getCategoryIngredientList, getColorList, getIngredientPlainById, getUnitList } from "@/app/actions";
+// import EditIngredientForm from "./EditIngredientForm";
 
-export default async function Page({ params }: PageProps) {
-  const id = parseInt(params.id, 10);
+// interface PageProps {
+//   params: {
+//     id: string;
+//   };
+// }
 
-  // Fetch data from the database
-  const ingredient = await getIngredientPlainById(id);
-  const units = await getUnitList();
-  const categories = await getCategoryIngredientList();
-  const colors = await getColorList();
+// export default async function Page({ params }: PageProps) {
+//   const id = parseInt(params.id, 10);
 
-  if (!ingredient) {
-    return <div>Ingredient not found</div>;
-  }
+//   // Fetch data from the database
+//   const ingredient = await getIngredientPlainById(id);
+//   const units = await getUnitList();
+//   const categories = await getCategoryIngredientList();
+//   const colors = await getColorList();
 
-  return (
-    <div>
-      <h1>Edit Ingredient</h1>
-      <EditIngredientForm
-        ingredient={{
-          ...ingredient,
-          unitId: ingredient.unitId ?? 0,
-          colorId: ingredient.colorId ?? 0,
-          categoryIngredientId: ingredient.categoryIngredientId ?? 0,
-        }}
-        units={units}
-        categories={categories}
-        colors={colors}
-      />
-    </div>
-  );
-}
+//   if (!ingredient) {
+//     return <div>Ingredient not found</div>;
+//   }
+
+//   return (
+//     <div>
+//       <h1>Edit Ingredient</h1>
+//       <EditIngredientForm
+//         ingredient={{
+//           ...ingredient,
+//           unitId: ingredient.unitId ?? 0,
+//           colorId: ingredient.colorId ?? 0,
+//           categoryIngredientId: ingredient.categoryIngredientId ?? 0,
+//         }}
+//         units={units}
+//         categories={categories}
+//         colors={colors}
+//       />
+//     </div>
+//   );
+// }

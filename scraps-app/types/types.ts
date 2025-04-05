@@ -86,3 +86,27 @@ export interface FullRecipe {
   servings: number;
   ingredients: RecipeIngredient[];
 }
+
+export interface RecipeIngredientWithMissingInfo {
+  ingredient: {
+    id: number;
+    name: string;
+  };
+  quantityNeeded: number;
+  unit: Unit;
+  isMissing: boolean;
+}
+
+export interface FullRecipeWithMissingInfo {
+  id: number;
+  title: string;
+  method: string;
+  time: number;
+  servings: number;
+  difficultyLevel: string;
+  image?: string;
+  category: CategoryRecipe;
+  ingredients: RecipeIngredientWithMissingInfo[];
+  missingIngredients: RecipeIngredientWithMissingInfo[];
+  missingCount: number;
+}

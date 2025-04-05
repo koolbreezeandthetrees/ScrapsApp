@@ -1,4 +1,4 @@
-import { getIngredientsByCategory } from "@/app/actions";
+import { getIngredientsByCategory } from "@/app/actions/ingredients";
 import Link from "next/link";
 import { Settings } from "lucide-react";
 

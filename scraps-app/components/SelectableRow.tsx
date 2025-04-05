@@ -3,7 +3,7 @@ import React from "react";
 export interface SelectableRowProps<T> {
   name: string;
   options: T[];
-  selected: T;
+  selected: T | null;
   onSelect: (value: T) => void;
   getLabel?: (option: T) => string;
   getValue?: (option: T) => string | number;
@@ -26,7 +26,7 @@ export function SelectableRow<T>({
       {options.map((option, idx) => {
         const value = getValue(option);
         const label = getLabel(option);
-        const isSelected = getValue(selected) === value;
+        const isSelected = selected !== null && getValue(selected) === value;
 
         return (
           <button

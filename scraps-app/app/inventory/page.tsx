@@ -13,6 +13,7 @@ import { getIngredientById } from "@/app/actions/ingredients";
 import IngredientForm from "./_components/IngredientForm";
 import CategoryColumn from "./_components/CategoryColumn";
 import { CategoryIngredient, InventoryItem } from "@/types/types";
+import {  CircularProgress, Stack } from "@mui/material";
 
 export default function InventoryPage() {
   const { user } = useUser();
@@ -136,37 +137,49 @@ export default function InventoryPage() {
     }
   };
 
-  return (
-    <div className="inv-container-main">
-      {hasInventory === null ? (
-        <p>Loading...</p>
-      ) : hasInventory ? (
-        <div className="inv-lists">
-          {categories.map((category) => (
-            <CategoryColumn
-              key={category.id}
-              category={category}
-              inventory={inventory[category.id] || []}
-              onUpdateQuantity={handleUpdateQuantity}
-              onAddIngredient={handleAddIngredient}
-              onFilter={() => {}}
-            />
-          ))}
-        </div>
-      ) : (
-        <button onClick={handleCreateInventory}>Create Inventory</button>
-      )}
-
-      {/* ✅ Toggle button for the form */}
-      <button
-        className="floating-btn"
-        onClick={() => setShowIngredientForm((prev) => !prev)}
+ 
+return (
+  <Stack spacing={10}>
+    {hasInventory === null ? (
+      <CircularProgress />
+    ) : hasInventory ? (
+      <Stack
+        direction="row"
+        spacing={3}
+        mt={3}
+        justifyContent="space-around"
+        flexWrap="wrap"
       >
-        {showIngredientForm ? "Close Form" : "+ Add Ingredient"}
+        {categories.map((category) => (
+          <CategoryColumn
+            key={category.id}
+            category={category}
+            inventory={inventory[category.id] || []}
+            onUpdateQuantity={handleUpdateQuantity}
+            onAddIngredient={handleAddIngredient}
+            onFilter={() => {}}
+          />
+        ))}
+      </Stack>
+    ) : (
+      <button className="button" onClick={handleCreateInventory}>
+        Create Inventory
       </button>
+    )}
 
-      {/* ✅ Conditionally render the IngredientForm */}
-      {showIngredientForm && <IngredientForm />}
-    </div>
-  );
+    {/* ✅ Toggle button for the form */}
+    <button
+      className="button floating-btn"
+      onClick={() => setShowIngredientForm((prev) => !prev)}
+    >
+      {showIngredientForm ? "Close Form" : "+ Add Ingredient"}
+    </button>
+
+
+
+    {/* ✅ Conditionally render the IngredientForm */}
+    {showIngredientForm && <IngredientForm />}
+  </Stack>
+);
 }
+;

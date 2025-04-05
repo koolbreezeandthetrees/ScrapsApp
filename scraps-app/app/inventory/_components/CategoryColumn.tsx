@@ -11,6 +11,7 @@ import {
   InventoryItem as InventoryItemType,
   Color,
 } from "@/types/types";
+import { Box, Stack } from "@mui/material";
 // import { useUser } from "@clerk/nextjs";
 
 interface CategoryColumnProps {
@@ -52,25 +53,37 @@ export default function CategoryColumn({
   };
 
   return (
-    <div className="inv-list-col">
-      
+    <Stack
+      direction="column"
+      spacing={2}
+      flexGrow={1}
+      flexBasis={0}
+      minWidth={200}
+    >
       {/* TOP */}
-      <div className="inv-list-top">
+       <Stack direction="column" spacing={1}>
         {/* Category col list title */}
-        <div className="inv-list-top-title">
-          <Image
+        <Stack direction="row" alignItems="center" spacing={1} pl={0.5}>
+         <Image
             src={`/icons/${category.name.replace(" ", "_")}.svg`}
             alt={`${category.name} icon`}
-            className="logo"
-            width={50}
-            height={50}
+            width={20}
+            height={20}
           />
           <h3>{category.name}</h3>
-        </div>
+        </Stack>
 
         {/* MIDDLE */}
         {/* Current inventory list */}
-        <div className="inv-list-top-list">
+        <Box
+          sx={{
+            borderRadius: 2,
+            backgroundColor: "rgba(255,255,255,0.14)",
+            py: 3,
+            pl: 3,
+            pr: 2,
+          }}
+        >
           {inventory.length > 0 ? (
             <ul>
               {inventory.map((item) => (
@@ -86,8 +99,9 @@ export default function CategoryColumn({
               <p></p>
             </div>
           )}
-        </div>
-      </div>
+        </Box>
+      </Stack>
+
       {/* BOTTOM */}
       {/* Toggle  color button */}
       <button
@@ -99,8 +113,7 @@ export default function CategoryColumn({
       </button>
       {/* Color + Ingrdient container */}
       {showAddSection && availableColors.length > 0 && (
-        <div className="inv-list-bottom-wrapper">
-
+        <Box ml={1.5}>
           {/* Dot filters */}
           <ColorFilter
             categoryId={category.id}
@@ -109,7 +122,7 @@ export default function CategoryColumn({
           />
 
           {/* Add ingredients  */}
-          <div className="inv-list-bottom-filt-ing">
+          <Stack spacing={1} mt={1.5}>
             <h5>Select ingredient:</h5>
             {filteredIngredients.length > 0 && (
               <ul>
@@ -136,9 +149,9 @@ export default function CategoryColumn({
                 ))}
               </ul>
             )}
-          </div>
-        </div>
+          </Stack>
+        </Box>
       )}
-    </div>
+    </Stack>
   );
 }

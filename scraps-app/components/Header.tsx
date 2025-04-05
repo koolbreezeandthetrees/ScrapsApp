@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Header() {
   return (
     <header>
-      <nav className="navbar">
+      <nav className="navbar container">
           <div id="navbar" className="navbar-content">
             {/* LOGO */}
             <ul className="logo-container">

@@ -1,0 +1,147 @@
+
+
+/* ------------------------ RECIPE PAGE ----------------------- */
+
+/* RECIPE FORM */
+#recipe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.14);
+    padding: 30px;
+}
+
+.form-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/*  lists container */
+.recipe-container-lists {
+    display: flex;
+    gap: 20px;
+    width: 1450px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 0 auto;
+    padding: 90px 10px;
+    box-sizing: border-box;
+    font-size: 18px;
+}
+
+/* recipe details */
+.recipe-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+}
+
+.recipe-image {
+    width: 400px;
+    margin-top: 20px;
+}
+
+/* Style for the button container */
+.pencil-icon-container {
+    position: absolute;
+    top: 10px; /* Adjust the top distance */
+    right: 10px; /* Adjust the right distance */
+    z-index: 10; /* Ensure it stays above other elements */
+}
+
+/* Optional hover effect for the button */
+.pencil-icon-container a img:hover {
+    transform: scale(2.2); /* Slightly enlarge the icon on hover */
+    transition: transform 0.8s ease;
+}
+
+.selectable-row {
+  display: flex;
+  gap: 1rem; /* more space between values */
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.selectable-item {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0.2rem 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.selectable-item:hover {
+  opacity: 1;
+}
+
+.selectable-item.selected {
+  color: #748FB8; /* Tailwind's blue-600 */
+  font-weight: bold;
+  opacity: 1;
+}
+
+/*  ------- RECIPE & CALCULATE SHARED ----------- */
+
+/* row category */
+
+.row-cat {
+    width: 200px;
+}
+
+.row-cat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+/* row recipe + detail */
+
+.row-recipe, .row-detail {
+    border-left: 2px solid white;
+    padding-left: 30px;
+}
+
+/* row recipe */
+
+.row-recipe {
+    min-width: 530px;
+}
+
+/* Increase spacing between recipe list items */
+.row-recipe ul {
+    display: flex;
+    flex-direction: column;
+    gap: 9px; /* Adjust this value for more/less space */
+}
+
+
+
+/* row details */
+
+.row-detail {
+    flex-grow: 2;
+}
+
+.details-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.details-item h3 {
+    color: #FFFFFF;
+}
+
+.details-item p, ul {
+    color: #e5dfdb;
+}
+
+.grey-list {
+    color: #F1ECE8;
+}

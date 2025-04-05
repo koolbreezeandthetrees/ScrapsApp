@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Unit, CategoryIngredient, Color } from "@/types/types";
 import {
-  getUnitList,
+  createIngredient,
   getCategoryIngredientList,
   getColorList,
-  createIngredient,
+  getUnitList,
 } from "@/app/actions";
-import { Unit, CategoryIngredient, Color } from "@/types/types"; // ✅ Import types
+import { SelectableRow } from "@/components/SelectableRow";
 
 export default function IngredientForm() {
   const router = useRouter();
 
-  // ✅ Use correct types from your types file
   const [options, setOptions] = useState<{
     units: Unit[];
     categories: CategoryIngredient[];
@@ -26,14 +26,14 @@ export default function IngredientForm() {
 
   const [formData, setFormData] = useState<{
     name: string;
-    unit: string;
-    color: string;
-    category: string;
+    unit: Unit | null;
+    color: Color | null;
+    category: CategoryIngredient | null;
   }>({
     name: "",
-    unit: "",
-    color: "",
-    category: "",
+    unit: null,
+    color: null,
+    category: null,
   });
 
   useEffect(() => {
@@ -52,28 +52,37 @@ export default function IngredientForm() {
     fetchOptions();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.unit || !formData.color || !formData.category) {
+      alert("Please fill out all fields.");
+      return;
+    }
+
     try {
       const form = new FormData();
-      Object.entries(formData).forEach(([key, value]) =>
-        form.append(key, value)
-      );
+      form.append("name", formData.name);
+      form.append("unit", String(formData.unit.id));
+      form.append("color", String(formData.color.id));
+      form.append("category", String(formData.category.id));
 
       const newIngredientId = await createIngredient(form);
       if (!newIngredientId) throw new Error("No ingredient ID returned");
 
       alert("Ingredient added successfully!");
-      setFormData({ name: "", unit: "", color: "", category: "" });
+      setFormData({
+        name: "",
+        unit: null,
+        color: null,
+        category: null,
+      });
 
-      router.push(`/ingredients/${newIngredientId}`);
+      router.push(`/inventory`);
     } catch (error) {
       console.error("Error adding ingredient:", error);
       alert("Failed to add ingredient.");
@@ -82,9 +91,9 @@ export default function IngredientForm() {
 
   return (
     <div className="form-container" id="add-ingredient-form">
-      <h3>Add New Ingredient</h3>
+      <h2>Add new ingredient to database</h2>
       <form onSubmit={handleSubmit}>
-        {/* Ingredient Name */}
+        {/* Name input */}
         <div className="form-input-item">
           <label htmlFor="name">Ingredient Name</label>
           <input
@@ -97,34 +106,47 @@ export default function IngredientForm() {
           />
         </div>
 
-        {/* Unit Dropdown */}
-        <Dropdown
-          name="unit"
-          label="Unit"
-          value={formData.unit}
-          onChange={handleChange}
-          options={options.units}
-        />
+        {/* Unit */}
+        <div className="form-input-item">
+          <label id="unit-label">Unit</label>
+          <SelectableRow
+            name="unit"
+            options={options.units}
+            selected={formData.unit}
+            onSelect={(unit) => setFormData((prev) => ({ ...prev, unit }))}
+            getLabel={(u) => u.name}
+            getValue={(u) => u.id}
+          />
+        </div>
 
-        {/* Color Dropdown */}
-        <Dropdown
-          name="color"
-          label="Color"
-          value={formData.color}
-          onChange={handleChange}
-          options={options.colors}
-        />
+        {/* Color */}
+        <div className="form-input-item">
+          <label id="color-label">Color</label>
+          <SelectableRow
+            name="color"
+            options={options.colors}
+            selected={formData.color}
+            onSelect={(color) => setFormData((prev) => ({ ...prev, color }))}
+            getLabel={(c) => c.name}
+            getValue={(c) => c.id}
+          />
+        </div>
 
-        {/* Category Dropdown */}
-        <Dropdown
-          name="category"
-          label="Category"
-          value={formData.category}
-          onChange={handleChange}
-          options={options.categories}
-        />
+        {/* Category */}
+        <div className="form-input-item">
+          <label id="category-label">Category</label>
+          <SelectableRow
+            name="category"
+            options={options.categories}
+            selected={formData.category}
+            onSelect={(category) =>
+              setFormData((prev) => ({ ...prev, category }))
+            }
+            getLabel={(c) => c.name}
+            getValue={(c) => c.id}
+          />
+        </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="button ing-form-submit-btn grow-element-normal"
@@ -132,39 +154,6 @@ export default function IngredientForm() {
           Submit
         </button>
       </form>
-    </div>
-  );
-}
-
-// ✅ Strongly Typed Reusable Dropdown Component
-interface DropdownProps<T> {
-  name: string;
-  label: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: T[];
-}
-
-function Dropdown<T extends { id: number; name: string }>({
-  name,
-  label,
-  value,
-  onChange,
-  options,
-}: DropdownProps<T>) {
-  return (
-    <div className="form-input-item">
-      <label htmlFor={name}>{label}</label>
-      <select name={name} id={name} value={value} onChange={onChange} required>
-        <option value="" disabled>
-          Select {label.toLowerCase()}
-        </option>
-        {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.name}
-          </option>
-        ))}
-      </select>
     </div>
   );
 }

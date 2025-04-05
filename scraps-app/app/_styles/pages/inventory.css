@@ -1,0 +1,159 @@
+
+/* delete */
+.inv-list-col {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 200px;
+    box-sizing: border-box;
+}
+
+/* inventory list */
+
+/* LIST TOP */
+
+.inv-list-top {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+/* title */
+
+.inv-list-top-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 4px;
+}
+
+.inv-list-top-title img {
+    width: 20px;
+    height: 20px;
+}
+
+/* list */
+
+.inv-list-top-list {
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.14);
+    padding: 30px;
+}
+
+.inv-list-top-list li {
+    font-size: 10px;
+}
+
+/* list item */
+
+.inv-list-top-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: space-between;
+    font-size: 10px;
+}
+
+/* list item details */
+
+.inv-list-top-item-name {
+    flex-grow: 2;
+}
+
+.inv-list-top-item-quantity {
+    width: 30px;
+    text-align: center;
+}
+
+.inv-list-top-item-unit {
+    text-align: left;
+}
+
+/* list item details button */
+
+.inv-list-top-item-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+
+.inv-list-top-item-buttons form {
+    display: inline-block;
+}
+
+
+
+/* LIST MIDDLE */
+
+.inv-list-toggle {
+
+}
+
+/* LIST BOTTOM - ADD INVENTORY */
+
+
+
+
+/* dots */
+
+.color-dots {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* filt. ingredient. wrapper in main code */
+
+.inv-list-bottom-filt-ing {
+    margin-top: 10px;
+}
+
+/* details in function*/
+.inv-list-bottom-filt-ing ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inv-list-bottom-filt-ing-item {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    justify-content: space-between;
+}
+
+/* submit  */
+.ing-filt-btn {
+
+}
+
+
+/* ADD INGREDIIENT TO COLLECTION - FORM */
+
+
+
+/* FORM */
+
+
+/* form button */
+
+.ing-form-submit-btn {
+    margin-top: 26px;
+}
+
+.ing-edit-db-btn {
+    margin-top: 16px;
+    font-size:10px;
+}

@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import AddRecipeForm from "@/app/recipes/_components/AddRecipeForm";
-import { CategoryRecipe, FullRecipe } from "@/types/types";
+import { CategoryRecipe, FullRecipe, Ingredient, Unit } from "@/types/types";
+
+import { RecipeForm } from "@/app/recipes/_components/RecipeForm/RecipeForm";
+import { useRecipeForm } from "@/app/recipes/_components/RecipeForm/useRecipeForm";
+import { getAllIngredients } from "@/app/actions/ingredients";
+import { getUnitList } from "@/app/actions/common";
+import { createRecipe } from "@/app/actions/recipes";
 
 interface RecipesClientProps {
   categories: CategoryRecipe[];
@@ -22,8 +27,43 @@ export default function RecipesClient({
   );
   const [selectedRecipe, setSelectedRecipe] = useState<FullRecipe | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
+  const [allUnits, setAllUnits] = useState<Unit[]>([]);
+  const [formReady, setFormReady] = useState(false);
 
-  // Filter recipes by selected category
+  const {
+    formData,
+    setFormData,
+    imageUrl,
+    setImageUrl,
+    recipeIngredients,
+    handleAddIngredient,
+    handleRemoveIngredient,
+  } = useRecipeForm({
+    initialFormData: {
+      title: "",
+      method: "",
+      difficultyLevel: "easy",
+      time: 5,
+      servings: 1,
+      categoryRecipeId: categories[0]?.id.toString() || "",
+    },
+  });
+
+  useEffect(() => {
+    async function fetchFormData() {
+      const [ingredients, units] = await Promise.all([
+        getAllIngredients(),
+        getUnitList(),
+      ]);
+      setAllIngredients(ingredients);
+      setAllUnits(units);
+      setFormReady(true);
+    }
+
+    fetchFormData();
+  }, []);
+
   const filteredRecipes = useMemo(() => {
     if (selectedCategoryId == null) return [];
     return recipes.filter((r) => r.category.id === selectedCategoryId);
@@ -44,6 +84,33 @@ export default function RecipesClient({
 
   function toggleAddForm() {
     setShowAddForm((prev) => !prev);
+  }
+
+  async function handleCreateRecipe(e: React.FormEvent) {
+    e.preventDefault();
+
+    const form = new FormData();
+    form.append("title", formData.title);
+    form.append("method", formData.method);
+    form.append("difficultyLevel", formData.difficultyLevel);
+    form.append("time", formData.time.toString());
+    form.append("servings", formData.servings.toString());
+    form.append("categoryRecipeId", formData.categoryRecipeId);
+    form.append("image_url", imageUrl || "");
+
+    try {
+      const result = await createRecipe(form, recipeIngredients);
+      if (result?.success) {
+        alert("Recipe created!");
+        setShowAddForm(false);
+        router.refresh(); // re-fetch server data
+      } else {
+        alert("Failed to create recipe.");
+      }
+    } catch (err) {
+      console.error("Create error:", err);
+      alert("Something went wrong.");
+    }
   }
 
   return (
@@ -136,9 +203,13 @@ export default function RecipesClient({
                   <p>{selectedRecipe.servings}</p>
                 </div>
 
-                <Image src={selectedRecipe.image || "/placeholder-image.jpg"} alt="Recipe" height={400} width={400}/>
+                <Image
+                  src={selectedRecipe.image || "/placeholder-image.jpg"}
+                  alt="Recipe"
+                  height={400}
+                  width={400}
+                />
 
-                {/* Edit icon => go to Edit page */}
                 <div
                   className="pencil-icon-container clickable"
                   onClick={() => handleEditClick(selectedRecipe.id)}
@@ -157,14 +228,36 @@ export default function RecipesClient({
       </div>
 
       {/* ===== Add New Recipe Form is rendered at the bottom ===== */}
-      <div style={{ marginTop: "2rem" }}>
-        <AddRecipeForm visible={showAddForm} />
-      </div>
+      {showAddForm && formReady && (
+        <div
+          style={{ marginTop: "2rem" }}
+          className="edit-recipe-form-container"
+          id="recipe-form"
+        >
+          <h2>Add New Recipe</h2>
+          <RecipeForm
+            formData={formData}
+            setFormData={setFormData}
+            imageUrl={imageUrl}
+            setImageUrl={setImageUrl}
+            categories={categories}
+            ingredients={allIngredients}
+            units={allUnits}
+            recipeIngredients={recipeIngredients}
+            onAddIngredient={(ingredient, unitId, quantity) =>
+              handleAddIngredient(ingredient, unitId, quantity, allUnits)
+            }
+            onRemoveIngredient={handleRemoveIngredient}
+            onSubmit={handleCreateRecipe}
+            submitLabel="Create Recipe"
+          />
+        </div>
+      )}
 
       {/* Floating button to toggle form */}
       <button
-        id="toggle-form-btn"
-        className="floating-btn"
+        id="button"
+        className="button floating-btn"
         onClick={toggleAddForm}
       >
         {showAddForm ? "Close" : "+ Add Recipe"}

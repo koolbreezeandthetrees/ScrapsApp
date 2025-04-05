@@ -1,21 +1,27 @@
 import { useState } from "react";
 import { Ingredient, RecipeIngredient, Unit } from "@/types/types";
 
-export function useRecipeForm(initialValues: {
-  title?: string;
-  method?: string;
-  difficultyLevel?: string;
-  time?: number;
-  servings?: number;
-  categoryRecipeId?: string;
-}) {
-  const [formData, setFormData] = useState({
-    title: initialValues.title || "",
-    method: initialValues.method || "",
-    difficultyLevel: initialValues.difficultyLevel || "Easy",
-    time: initialValues.time || 10,
-    servings: initialValues.servings || 1,
-    categoryRecipeId: initialValues.categoryRecipeId || "",
+type RecipeFormData = {
+  title: string;
+  method: string;
+  difficultyLevel: string;
+  time: number;
+  servings: number;
+  categoryRecipeId: string;
+};
+
+type UseRecipeFormProps = {
+  initialFormData?: RecipeFormData;
+};
+
+export function useRecipeForm({ initialFormData }: UseRecipeFormProps = {}) {
+  const [formData, setFormData] = useState<RecipeFormData>({
+    title: initialFormData?.title || "",
+    method: initialFormData?.method || "",
+    difficultyLevel: initialFormData?.difficultyLevel || "easy",
+    time: initialFormData?.time || 10,
+    servings: initialFormData?.servings || 1,
+    categoryRecipeId: initialFormData?.categoryRecipeId || "",
   });
 
   const [imageUrl, setImageUrl] = useState("");
@@ -34,7 +40,7 @@ export function useRecipeForm(initialValues: {
 
     const newItem: RecipeIngredient = {
       id: Date.now(),
-      recipeId: 0, // will be replaced on submit if needed
+      recipeId: 0,
       ingredient,
       unit: foundUnit,
       quantityNeeded: quantity,

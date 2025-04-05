@@ -1,0 +1,13 @@
+.uppercase {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.title {
+  margin-left: 153px;
+  margin-top: 34px;
+}

@@ -1,0 +1,54 @@
+.button,
+.delete-btn,
+.save-edit-ingredient-button {
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.button {
+  background-color: SeaShell;
+  color: darkgrey;
+  width: 200px;
+}
+
+.button:hover {
+  background-color: #E4DC42;
+  color: white;
+}
+
+.floating-btn {
+    position: fixed;
+    bottom: 50px;
+    right: 70px;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.delete-btn {
+  background-color: #BB5C4A;
+  color: white;
+}
+
+.save-edit-ingredient-button {
+  background-color: cornflowerblue;
+}
+
+.float-right {
+  float: right;
+  margin-top: 10px;
+}
+
+.button-container,
+.two-btn-container {
+  display: flex;
+  margin-top: 10px;
+}
+
+.button-container {
+  justify-content: flex-end;
+}
+
+.two-btn-container {
+  justify-content: space-between;
+  gap: 20px;
+}

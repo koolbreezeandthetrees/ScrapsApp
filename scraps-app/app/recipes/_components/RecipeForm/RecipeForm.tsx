@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { UploadButton } from "@/app/api/uploadthing/uploadthing";
-import { SelectableRow } from "../../_components/SelectableRow";
+import { SelectableRow } from "../../../../components/SelectableRow";
 import {
   CategoryRecipe,
   Ingredient,
