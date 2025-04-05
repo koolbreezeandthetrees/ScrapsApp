@@ -90,7 +90,7 @@ export async function getAllRecipes(): Promise<FullRecipe[]> {
             name: row.unitName ?? "",
             abbreviation: row.unitAbbreviation ?? "",
           },
-          category: { id: 0, name: "", description: "" }, // Not included in this query
+          category: { id: 0, name: ""}, // Not included in this query
           color: { id: 0, name: "", colorCode: "" },
         },
         unit: {
@@ -171,7 +171,7 @@ export async function getRecipeById(
             name: row.unitName ?? "",
             abbreviation: row.unitAbbreviation ?? "",
           },
-          category: { id: 0, name: "", description: "" },
+          category: { id: 0, name: "" },
           color: { id: 0, name: "", colorCode: "" },
         },
         unit: {
@@ -237,28 +237,41 @@ export async function createRecipe(
   }
 }
 
-// =============== POST: UPDATE RECIPE ===============
-interface RecipeFormData {
-  title: string;
-  method: string;
-  difficultyLevel: string;
-  time: string;
-  servings: string;
-  categoryRecipeId: string;
-}
-export async function updateRecipe(recipeId: number, formData: RecipeFormData) {
+// =============== UPDATE RECIPE ===============
+export async function updateRecipe(recipeId: number, data: FormData) {
+  const title = data.get("title") as string;
+  const method = data.get("method") as string;
+  const difficultyLevel = data.get("difficultyLevel") as string;
+  const timeVal = parseInt(data.get("time") as string, 10);
+  const servingsVal = parseInt(data.get("servings") as string, 10);
+  const categoryVal = parseInt(data.get("categoryRecipeId") as string, 10);
+  const imageUrl = data.get("image_url") as string | null;
+
+  console.log("Updating recipe:", {
+    recipeId,
+    title,
+    method,
+    difficultyLevel,
+    time: timeVal,
+    servings: servingsVal,
+    categoryRecipeId: categoryVal,
+    image: imageUrl,
+  });
+
   await db
     .update(recipe)
     .set({
-      title: formData.title,
-      method: formData.method,
-      difficultyLevel: formData.difficultyLevel,
-      time: parseInt(formData.time, 10),
-      servings: parseInt(formData.servings, 10),
-      categoryRecipeId: parseInt(formData.categoryRecipeId, 10),
+      title,
+      method,
+      difficultyLevel,
+      time: timeVal,
+      servings: servingsVal,
+      categoryRecipeId: categoryVal,
+      image: imageUrl ?? null,
     })
     .where(eq(recipe.id, recipeId));
 }
+
 
 // =============== UPDATE RECIPE INGREDIENTS ===============
 export async function updateRecipeIngredients(

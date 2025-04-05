@@ -22,6 +22,7 @@ import {
   RecipeIngredient,
   Ingredient,
 } from "@/types/types";
+import { RecipeFormData } from "./recipes/[id]/edit/page";
 
 /* -------------------------------------
    1. COMMON: UNITS, INGREDIENT CATEGORIES, COLORS
@@ -471,7 +472,7 @@ export async function getAllRecipes(): Promise<FullRecipe[]> {
             name: row.unitName ?? "",
             abbreviation: row.unitAbbreviation ?? "",
           },
-          category: { id: 0, name: "", description: "" }, // Not included in this query
+          category: { id: 0, name: "" }, // Not included in this query
           color: { id: 0, name: "", colorCode: "" },
         },
         unit: {
@@ -552,7 +553,7 @@ export async function getRecipeById(
             name: row.unitName ?? "",
             abbreviation: row.unitAbbreviation ?? "",
           },
-          category: { id: 0, name: "", description: "" },
+          category: { id: 0, name: "" },
           color: { id: 0, name: "", colorCode: "" },
         },
         unit: {
@@ -607,6 +608,52 @@ interface CreateRecipeResult {
   recipeId?: number;
 }
 
+// export async function createRecipe(
+//   formData: FormData
+// ): Promise<CreateRecipeResult> {
+//   try {
+//     const title = formData.get("title") as string;
+//     const method = formData.get("method") as string;
+//     const difficulty = formData.get("difficulty") as string;
+//     const timeVal = parseInt(String(formData.get("time")), 10);
+//     const servingsVal = parseInt(String(formData.get("servings")), 10);
+//     const categoryVal = parseInt(String(formData.get("category_id")), 10);
+
+//     // Optional file upload
+//     const imageFile = formData.get("image") as File | null;
+//     let imageFilename: string | null = null;
+//     if (imageFile && imageFile.size > 0) {
+//       // Save or upload the file
+//       imageFilename = "placeholder.jpg";
+//     }
+
+//     // Insert into "recipe" table
+//     const [newRecipe] = await db
+//       .insert(recipe)
+//       .values({
+//         title,
+//         method,
+//         difficultyLevel: difficulty,
+//         time: timeVal,
+//         servings: servingsVal,
+//         categoryRecipeId: categoryVal,
+//         image: imageFilename,
+//       })
+//       .returning({ id: recipe.id });
+
+//     // TODO: If you want to handle recipe ingredients from formData:
+//     // const ingIds = formData.getAll("ingredients[]");
+//     // const qtys = formData.getAll("quantities[]");
+//     // const units = formData.getAll("units[]");
+//     // ...then insert each row in recipeIngredient.
+
+//     return { success: true, recipeId: newRecipe.id };
+//   } catch (error) {
+//     console.error("Error creating recipe:", error);
+//     return { success: false };
+//   }
+// }
+
 export async function createRecipe(
   formData: FormData
 ): Promise<CreateRecipeResult> {
@@ -618,15 +665,9 @@ export async function createRecipe(
     const servingsVal = parseInt(String(formData.get("servings")), 10);
     const categoryVal = parseInt(String(formData.get("category_id")), 10);
 
-    // Optional file upload
-    const imageFile = formData.get("image") as File | null;
-    let imageFilename: string | null = null;
-    if (imageFile && imageFile.size > 0) {
-      // Save or upload the file
-      imageFilename = "placeholder.jpg";
-    }
+    const imageUrl = formData.get("image_url") as string | null;
 
-    // Insert into "recipe" table
+    // Insert into recipe table
     const [newRecipe] = await db
       .insert(recipe)
       .values({
@@ -636,15 +677,9 @@ export async function createRecipe(
         time: timeVal,
         servings: servingsVal,
         categoryRecipeId: categoryVal,
-        image: imageFilename,
+        image: imageUrl ?? null,
       })
       .returning({ id: recipe.id });
-
-    // TODO: If you want to handle recipe ingredients from formData:
-    // const ingIds = formData.getAll("ingredients[]");
-    // const qtys = formData.getAll("quantities[]");
-    // const units = formData.getAll("units[]");
-    // ...then insert each row in recipeIngredient.
 
     return { success: true, recipeId: newRecipe.id };
   } catch (error) {
@@ -653,29 +688,32 @@ export async function createRecipe(
   }
 }
 
-// =============== UPDATE RECIPE DETAILS ===============
-interface RecipeFormData {
-  title: string;
-  method: string;
-  difficultyLevel: string;
-  time: string;
-  servings: string;
-  categoryRecipeId: string;
-}
 
-export async function updateRecipe(recipeId: number, formData: RecipeFormData) {
+// =============== UPDATE RECIPE DETAILS ===============
+export async function updateRecipe(recipeId: number, data: RecipeFormData) {
+  
+  const title = data.title;
+  const method = data.method;
+  const difficultyLevel = data.difficultyLevel;
+  const timeVal = parseInt(data.time, 10);
+  const servingsVal = parseInt(data.servings, 10);
+  const categoryVal = parseInt(data.categoryRecipeId, 10);
+  const imageUrl = data.image_url; // directly available
+
   await db
     .update(recipe)
     .set({
-      title: formData.title,
-      method: formData.method,
-      difficultyLevel: formData.difficultyLevel,
-      time: parseInt(formData.time, 10),
-      servings: parseInt(formData.servings, 10),
-      categoryRecipeId: parseInt(formData.categoryRecipeId, 10),
+      title,
+      method,
+      difficultyLevel,
+      time: timeVal,
+      servings: servingsVal,
+      categoryRecipeId: categoryVal,
+      image: imageUrl ?? null, // save image URL or null
     })
     .where(eq(recipe.id, recipeId));
 }
+
 
 // =============== UPDATE RECIPE INGREDIENTS ===============
 export async function updateRecipeIngredients(

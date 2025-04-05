@@ -1,6 +1,6 @@
 "use server";
 
-import RecipesClient from "./_components/RecipesClient";
+import RecipesClient from "@/app/recipes/RecipesClient";
 import { getAllRecipeCategories, getAllRecipes } from "@/app/actions/recipes";
 
 export default async function RecipesPage() {

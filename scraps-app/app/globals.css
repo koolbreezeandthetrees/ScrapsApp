@@ -544,6 +544,20 @@ select {
 /* ------------------------ RECIPE PAGE ----------------------- */
 
 /* RECIPE FORM */
+#recipe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.14);
+    padding: 30px;
+}
+
+.form-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
 /*  lists container */
 .recipe-container-lists {
@@ -585,6 +599,33 @@ select {
     transition: transform 0.8s ease;
 }
 
+.selectable-row {
+  display: flex;
+  gap: 1rem; /* more space between values */
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.selectable-item {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0.2rem 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.selectable-item:hover {
+  opacity: 1;
+}
+
+.selectable-item.selected {
+  color: #748FB8; /* Tailwind's blue-600 */
+  font-weight: bold;
+  opacity: 1;
+}
 
 /*  ------- RECIPE & CALCULATE SHARED ----------- */
 
@@ -597,8 +638,9 @@ select {
 .row-cat-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 18px;
 }
+
 
 /* row recipe + detail */
 
@@ -612,6 +654,15 @@ select {
 .row-recipe {
     min-width: 430px;
 }
+
+/* Increase spacing between recipe list items */
+.row-recipe ul {
+    display: flex;
+    flex-direction: column;
+    gap: 9px; /* Adjust this value for more/less space */
+}
+
+
 
 /* row details */
 
@@ -629,7 +680,7 @@ select {
 }
 
 .details-item p, ul {
-    color: #F1ECE8;
+    color: #e5dfdb;
 }
 
 .grey-list {
