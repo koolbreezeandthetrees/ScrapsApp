@@ -2,13 +2,11 @@ import { getIngredientById } from "@/app/actions";
 import { Ingredient } from "@/types/types";
 import { notFound } from "next/navigation";
 
-interface IngredientPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function IngredientPage({ params }: IngredientPageProps) {
+export default async function IngredientPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const ingredientId = parseInt(params.id);
 
   if (isNaN(ingredientId)) {
