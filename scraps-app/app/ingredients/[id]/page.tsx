@@ -1,5 +1,5 @@
 import { getIngredientById } from "@/app/actions";
-import { Ingredient } from "@/types/ingredient/ingredientTypes";
+import { Ingredient } from "@/types/types";
 import { notFound } from "next/navigation";
 
 interface IngredientPageProps {
