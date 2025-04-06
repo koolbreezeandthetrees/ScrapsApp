@@ -2,13 +2,11 @@ import { getRecipeById } from "@/app/actions";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
-interface RecipePageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function RecipePage({ params }: RecipePageProps) {
+export default async function RecipePage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const recipeId = parseInt(params.id);
 
   if (isNaN(recipeId)) {
@@ -25,13 +23,13 @@ export default async function RecipePage({ params }: RecipePageProps) {
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-2">{recipe.title}</h1>
 
-        <Image
-          src={recipe.image || "/placeholder-image.jpg"}
-          alt={recipe.title}
-          width={800} // Adjust width as needed
-          height={600} // Adjust height as needed
-          className="w-full h-auto mb-4 rounded-xl shadow"
-        />
+      <Image
+        src={recipe.image || "/placeholder-image.jpg"}
+        alt={recipe.title}
+        width={800}
+        height={600}
+        className="w-full h-auto mb-4 rounded-xl shadow"
+      />
 
       <div className="text-sm text-gray-500 mb-6">
         <p>
