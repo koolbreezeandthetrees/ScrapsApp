@@ -81,7 +81,7 @@ export default function EditRecipePage() {
    }
 
    fetchData();
- }, [recipeId]);
+ }, [handleAddIngredient, recipeId, setFormData, setImageUrl]);
 
 
   async function handleSubmit(e: React.FormEvent) {
