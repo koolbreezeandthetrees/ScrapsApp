@@ -2,11 +2,13 @@ import { getRecipeById } from "@/app/actions";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
-export default async function RecipePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+interface PageParams {
+  params: {
+    id: string;
+  };
+}
+
+export default async function RecipePage({ params }: PageParams) {
   const recipeId = parseInt(params.id);
 
   if (isNaN(recipeId)) {
