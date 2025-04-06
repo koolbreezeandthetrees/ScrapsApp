@@ -1,22 +1,46 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { getIngredientById } from "@/app/actions";
 import { Ingredient } from "@/types/types";
-import { notFound } from "next/navigation";
 
-export default async function IngredientPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const ingredientId = parseInt(params.id);
+export default function IngredientPage() {
+  const { id } = useParams();
+  const [ingredient, setIngredient] = useState<Ingredient | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  if (isNaN(ingredientId)) {
-    throw new Error("Invalid ingredient ID");
+  useEffect(() => {
+    if (!id || Array.isArray(id)) {
+      setError("Invalid ingredient ID");
+      return;
+    }
+
+    const ingredientId = parseInt(id);
+    if (isNaN(ingredientId)) {
+      setError("Invalid ingredient ID");
+      return;
+    }
+
+    getIngredientById(ingredientId)
+      .then((data) => {
+        if (data) {
+          setIngredient(data);
+        } else {
+          setError("Ingredient not found");
+        }
+      })
+      .catch(() => {
+        setError("Failed to fetch ingredient");
+      });
+  }, [id]);
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
-  const ingredient: Ingredient = await getIngredientById(ingredientId);
-
   if (!ingredient) {
-    notFound();
+    return <p>Loading...</p>;
   }
 
   return (
