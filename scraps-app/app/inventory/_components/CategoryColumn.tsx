@@ -11,7 +11,7 @@ import {
   InventoryItem as InventoryItemType,
   Color,
 } from "@/types/types";
-import { Box, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 // import { useUser } from "@clerk/nextjs";
 
 interface CategoryColumnProps {
@@ -61,10 +61,10 @@ export default function CategoryColumn({
       minWidth={200}
     >
       {/* TOP */}
-       <Stack direction="column" spacing={1}>
+      <Stack direction="column" spacing={1}>
         {/* Category col list title */}
         <Stack direction="row" alignItems="center" spacing={1} pl={0.5}>
-         <Image
+          <Image
             src={`/icons/${category.name.replace(" ", "_")}.svg`}
             alt={`${category.name} icon`}
             width={20}
@@ -104,16 +104,18 @@ export default function CategoryColumn({
 
       {/* BOTTOM */}
       {/* Toggle  color button */}
-      <button
-        className="inv-list-toggle grow-element-normal"
+      <Button
         onClick={() => setShowAddSection(!showAddSection)}
-        aria-expanded={showAddSection}
-      >
-        {showAddSection ? `▲ Add to ${category.name}` : `▼ Add to ${category.name}`}
-      </button>
+        variant="text"
+        color="info"
+      sx={{ fontSize: "0.9rem"}}>
+        {showAddSection
+          ? `▲ Add to ${category.name}`
+          : `▼ Add to ${category.name}`}
+      </Button>
       {/* Color + Ingrdient container */}
       {showAddSection && availableColors.length > 0 && (
-        <Box ml={1.5}>
+        <Box ml={1.5} pl={2.5}>
           {/* Dot filters */}
           <ColorFilter
             categoryId={category.id}
@@ -122,7 +124,7 @@ export default function CategoryColumn({
           />
 
           {/* Add ingredients  */}
-          <Stack spacing={1} mt={1.5}>
+          <Stack spacing={1} mt={1}>
             <h5>Select ingredient:</h5>
             {filteredIngredients.length > 0 && (
               <ul>

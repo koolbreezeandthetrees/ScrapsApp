@@ -1,33 +1,37 @@
 "use client";
-import {
-  ClerkProvider
-} from "@clerk/nextjs";
+
+import { ClerkProvider } from "@clerk/nextjs";
+import "@uploadthing/react/styles.css";
 import "./_styles/globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import "@uploadthing/react/styles.css";
-import theme from "@/theme";
-import { ThemeProvider } from "@emotion/react";
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import createEmotionCache from "@/utils/emotionCache";
+import { CacheProvider } from "@emotion/react";
+import theme from "@/utils/theme/theme";
 
-// TODO move header more down the children tree
+const clientSideEmotionCache = createEmotionCache();
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <ClerkProvider>
-      <ThemeProvider theme={theme}>
-        <html lang="en">
-          <body>
-            <Header />
-            <div className="container">{children}</div>
-
-            <Footer />
-          </body>
-        </html>
-      </ThemeProvider>
+      <html lang="en">
+        <body>
+          <CacheProvider value={clientSideEmotionCache}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Header />
+              <div className="container">{children}</div>
+              <Footer />
+            </ThemeProvider>
+          </CacheProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

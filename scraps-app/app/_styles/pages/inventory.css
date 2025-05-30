@@ -87,9 +87,6 @@
 
 /* LIST MIDDLE */
 
-.inv-list-toggle {
-
-}
 
 /* LIST BOTTOM - ADD INVENTORY */
 
@@ -132,11 +129,6 @@
     gap: 12px;
     font-size: 11px;
     justify-content: space-between;
-}
-
-/* submit  */
-.ing-filt-btn {
-
 }
 
 

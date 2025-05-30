@@ -13,7 +13,9 @@
   "dependencies": {
     "@clerk/elements": "^0.22.5",
     "@clerk/nextjs": "^6.9.6",
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
+    "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/inconsolata": "^5.1.1",
     "@headlessui/react": "^2.2.1",

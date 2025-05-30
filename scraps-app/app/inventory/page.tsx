@@ -13,7 +13,7 @@ import { getIngredientById } from "@/app/actions/ingredients";
 import IngredientForm from "./_components/IngredientForm";
 import CategoryColumn from "./_components/CategoryColumn";
 import { CategoryIngredient, InventoryItem } from "@/types/types";
-import {  CircularProgress, Stack } from "@mui/material";
+import { Button, CircularProgress, Stack } from "@mui/material";
 
 export default function InventoryPage() {
   const { user } = useUser();
@@ -140,9 +140,11 @@ export default function InventoryPage() {
  
 return (
   <Stack spacing={10}>
-    {hasInventory === null ? (
+    {hasInventory === null
+      ? (
       <CircularProgress />
-    ) : hasInventory ? (
+      )
+      : hasInventory ? (
       <Stack
         direction="row"
         spacing={3}
@@ -162,20 +164,30 @@ return (
         ))}
       </Stack>
     ) : (
-      <button className="button" onClick={handleCreateInventory}>
-        Create Inventory
-      </button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCreateInventory}
+          >
+            Create Inventory
+          </Button>
     )}
+    
 
-    {/* ✅ Toggle button for the form */}
-    <button
-      className="button floating-btn"
-      onClick={() => setShowIngredientForm((prev) => !prev)}
+    <Button
+      variant="contained"
+      color="info"
+      onClick={() => setShowIngredientForm((previous) => !previous)}
+    sx={{
+      position: "fixed",
+      bottom: "50px",
+      right: "70px",
+      zIndex: 1000,
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+    }}
     >
-      {showIngredientForm ? "Close Form" : "+ Add Ingredient"}
-    </button>
-
-
+    {showIngredientForm ? "Close Form" : "+ Add Ingredient"}
+    </Button>
 
     {/* ✅ Conditionally render the IngredientForm */}
     {showIngredientForm && <IngredientForm />}
