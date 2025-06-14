@@ -1,9 +1,28 @@
-import { SignIn } from "@clerk/nextjs"
+// app/sign-in/[[...sign-in]]/page.tsx
+"use client";
 
-export default function Page() {
+import { SignIn } from "@clerk/nextjs";
+import { Stack } from "@mui/material";
+
+export default function SignInPage() {
   return (
-    <div className="container">
-      <SignIn />
-    </div>
-  )
+    <Stack
+      component="main"
+      alignItems="center"
+      justifyContent="center"
+      sx={{
+        minHeight: "100vh",
+        p: 4,
+        maxWidth: 1200,
+        m: "0 auto",
+      }}
+    >
+      <SignIn
+        path="/sign-in"
+        routing="path"
+        signUpUrl="/sign-up"
+        forceRedirectUrl="/inventory"
+      />
+    </Stack>
+  );
 }

@@ -20,3 +20,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.cl-footer {
+  display: none !important;
+}
+
+[data-localization-key="userProfile.navbar.title"],
+[data-localization-key="userProfile.navbar.description"] {
+  color: #FFF5EE !important;
+}
