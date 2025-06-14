@@ -14,7 +14,7 @@ import { createRecipe } from "@/app/actions/recipes";
 import { PenSquare } from "lucide-react";
 
 // Centralized Tailwind class strings for reuse
-const styles = {
+export const recipeStyles = {
   listsContainer: "px-4 py-8 flex gap-5 justify-start",
   categoryColumn: "flex flex-col gap-4 w-48",
   // Always show border between categories and recipes
@@ -24,6 +24,7 @@ const styles = {
   detailBorder: "border-l-2 border-white",
   detailItem: "flex flex-col gap-2",
   greyText: "text-[#e5dfdb] text-lg",
+  missingIngredient: "text-[#BB5C4A] text-lg",
   greyList: "text-[#e5dfdb] text-lg",
   formContainer: "flex flex-col gap-5 rounded-lg bg-white/20 p-8 mt-8",
 };
@@ -117,10 +118,10 @@ export default function RecipesClient({
       <Stack
         direction="row"
         alignItems="flex-start"
-        className={styles.listsContainer}
+        className={recipeStyles.listsContainer}
       >
         {/* Column 1: Categories */}
-        <Stack component="ul" className={styles.categoryColumn}>
+        <Stack component="ul" className={recipeStyles.categoryColumn}>
           {categories.map((cat) => (
             <li key={cat.id}>
               <button
@@ -137,9 +138,11 @@ export default function RecipesClient({
         </Stack>
 
         {/* Column 2: Recipe List */}
-        <Stack component="div" className={styles.recipeColumn}>
+        <Stack component="div" className={recipeStyles.recipeColumn}>
+
           {selectedCategoryId == null ? (
-            <Typography>Please select a category.</Typography>
+            <Typography variant="h6">Please select a category.</Typography>
+
           ) : filteredRecipes.length > 0 ? (
             <Stack component="ul" spacing={1}>
               {filteredRecipes.map((r) => (
@@ -154,14 +157,14 @@ export default function RecipesClient({
               ))}
             </Stack>
           ) : (
-            <Typography>No recipes found for this category.</Typography>
+            <Typography variant="h6">No recipes found for this category.</Typography>
           )}
         </Stack>
 
         {/* Column 3: Recipe Details */}
         <Stack
-          className={`${styles.detailColumn} ${
-            selectedRecipe ? styles.detailBorder : ""
+          className={`${recipeStyles.detailColumn} ${
+            selectedRecipe ? recipeStyles.detailBorder : ""
           }`}
         >
           {selectedRecipe && (
@@ -171,23 +174,23 @@ export default function RecipesClient({
               </Typography>
 
               {/* Method */}
-              <Stack className={styles.detailItem}>
+              <Stack className={recipeStyles.detailItem}>
                 <Typography variant="h6" className="text-white">
                   Method:
                 </Typography>
-                <Typography className={styles.greyText}>
+                <Typography className={recipeStyles.greyText}>
                   {selectedRecipe.method}
                 </Typography>
               </Stack>
 
               {/* Ingredients */}
-              <Stack className={styles.detailItem}>
+              <Stack className={recipeStyles.detailItem}>
                 <Typography variant="h6" className="text-white">
                   Ingredients:
                 </Typography>
                 <ul className="list-none pl-0 space-y-0.5">
                   {selectedRecipe.ingredients.map((ing, idx) => (
-                    <li key={idx} className={styles.greyList}>
+                    <li key={idx} className={recipeStyles.greyList}>
                       {ing.quantityNeeded} {ing.unit.abbreviation}{" "}
                       {ing.ingredient.name}
                     </li>
@@ -197,11 +200,11 @@ export default function RecipesClient({
 
               {/* Difficulty, Time, Servings */}
               {["Difficulty", "Time", "Servings"].map((label) => (
-                <Stack key={label} className={styles.detailItem}>
+                <Stack key={label} className={recipeStyles.detailItem}>
                   <Typography variant="h6" className="text-white">
                     {label}:
                   </Typography>
-                  <Typography className={styles.greyText}>
+                  <Typography className={recipeStyles.greyText}>
                     {label === "Difficulty"
                       ? selectedRecipe.difficultyLevel
                       : label === "Time"
@@ -217,7 +220,7 @@ export default function RecipesClient({
                 alt="Recipe image"
                 width={400}
                 height={400}
-                className="mt-4 rounded-lg"
+                className="mt-4"
               />
 
               {/* Edit button */}
@@ -240,7 +243,7 @@ export default function RecipesClient({
         <Stack
           component="form"
           onSubmit={handleCreateRecipe}
-          className={styles.formContainer}
+          className={recipeStyles.formContainer}
         >
           <Typography variant="h5" className="text-white">
             Add New Recipe

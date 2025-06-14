@@ -1,4 +1,6 @@
+import { recipeStyles } from "@/app/recipes/RecipesClient";
 import { CategoryRecipe } from "@/types/types";
+import { Stack } from "@mui/material";
 
 type Props = {
   categories: CategoryRecipe[];
@@ -12,25 +14,22 @@ export default function CategoryList({
   onSelectCategory,
 }: Props) {
   return (
-    <div className="row-cat">
-      <ul className="row-cat-list">
-        {categories.map((cat) => (
-          <li key={cat.id}>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                onSelectCategory(cat.id);
-              }}
-              className={`lowercase ${
-                selectedCategoryId === cat.id ? "active" : ""
-              }`}
-            >
-              {cat.name}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Stack component="ul" className={recipeStyles.categoryColumn}>
+      {categories.map((cat) => (
+        <li key={cat.id}>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectCategory(cat.id);
+            }}
+            className={`lowercase text-xl hover:text-gray-200 ${
+              selectedCategoryId === cat.id ? "text-blue-500" : "text-white"
+            }`}
+          >
+            {cat.name}
+          </button>
+        </li>
+      ))}
+    </Stack>
   );
 }

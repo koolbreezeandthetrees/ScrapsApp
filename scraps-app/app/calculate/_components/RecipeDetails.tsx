@@ -1,4 +1,6 @@
+import { recipeStyles } from "@/app/recipes/RecipesClient";
 import { FullRecipeWithMissingInfo } from "@/types/types";
+import { Stack, Typography } from "@mui/material";
 import Image from "next/image";
 
 type Props = {
@@ -9,52 +11,64 @@ export default function RecipeDetails({ recipe }: Props) {
   if (!recipe) return <div className="row-detail" />;
 
   return (
-    <div className="row-detail">
-      <div className="recipe-details">
-        <h2 className="uppercase">{recipe.title}</h2>
+    <Stack
+      className={`${recipeStyles.detailColumn} ${recipeStyles.detailBorder}`}
+    >
+      <Typography variant="h4" className="uppercase text-white">
+        {recipe.title}
+      </Typography>
 
-        <div className="details-item">
-          <h3>Method:</h3>
-          <p>{recipe.method}</p>
-        </div>
+      <Stack className={recipeStyles.detailItem}>
+        <Typography variant="h6" className="text-white">
+          Method:
+        </Typography>
+        <Typography className={recipeStyles.greyText}>
+          {recipe.method}
+        </Typography>
+      </Stack>
 
-        <div className="details-item">
-          <h3>Ingredients:</h3>
-          <ul>
-            {recipe.ingredients.map((ing, idx) => (
-              <li
-                key={idx}
-                className={ing.isMissing ? "missing-ingredient" : "grey-list"}
-              >
-                {ing.quantityNeeded} {ing.unit.abbreviation}{" "}
-                {ing.ingredient.name}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <Stack className={recipeStyles.detailItem}>
+        <Typography variant="h6" className="text-white">
+          Ingredients:
+        </Typography>
+        <ul className="list-none pl-0 space-y-0.5">
+          {recipe.ingredients.map((ing, idx) => (
+            <li
+              key={idx}
+              className={
+                ing.isMissing
+                  ? recipeStyles.missingIngredient
+                  : recipeStyles.greyList
+              }
+            >
+              {ing.quantityNeeded} {ing.unit.abbreviation} {ing.ingredient.name}
+            </li>
+          ))}
+        </ul>
+      </Stack>
 
-        <div className="details-item">
-          <h3>Difficulty:</h3>
-          <p>{recipe.difficultyLevel}</p>
-        </div>
+      {["Difficulty", "Time", "Servings"].map((label) => (
+        <Stack key={label} className={recipeStyles.detailItem}>
+          <Typography variant="h6" className="text-white">
+            {label}:
+          </Typography>
+          <Typography className={recipeStyles.greyText}>
+            {label === "Difficulty"
+              ? recipe.difficultyLevel
+              : label === "Time"
+              ? `${recipe.time} minutes`
+              : recipe.servings}
+          </Typography>
+        </Stack>
+      ))}
 
-        <div className="details-item">
-          <h3>Time:</h3>
-          <p>{recipe.time} minutes</p>
-        </div>
-
-        <div className="details-item">
-          <h3>Servings:</h3>
-          <p>{recipe.servings}</p>
-        </div>
-
-        <Image
-          src={recipe.image || "/placeholder-image.jpg"}
-          alt="Recipe"
-          height={400}
-          width={400}
-        />
-      </div>
-    </div>
+      <Image
+        src={recipe.image || "/placeholder-image.jpg"}
+        alt="Recipe"
+        height={400}
+        width={400}
+        className="mt-4"
+      />
+    </Stack>
   );
 }

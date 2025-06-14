@@ -1,4 +1,6 @@
+import { recipeStyles } from "@/app/recipes/RecipesClient";
 import { FullRecipeWithMissingInfo } from "@/types/types";
+import { Stack, Typography } from "@mui/material";
 
 type Props = {
   groupedRecipes: {
@@ -16,53 +18,49 @@ export default function RecipeList({
 }: Props) {
   if (selectedCategoryId === null) {
     return (
-      <div className="row-recipe">
-        <p>Please select a category.</p>
-      </div>
+      <Stack component="div" className={recipeStyles.recipeColumn}>
+        <Typography variant="h6">Please select a category.</Typography>
+      </Stack>
     );
   }
 
   if (groupedRecipes.length === 0) {
     return (
-      <div className="row-recipe">
-        <p>No recipes found in this category.</p>
-      </div>
+      <Stack component="div" className={recipeStyles.recipeColumn}>
+        <Typography variant="h6">No recipes found for this category.</Typography>
+      </Stack>
     );
   }
 
   return (
-    <div className="row-recipe">
-      <div id="recipe-list">
-        <h3 className="uppercase mb-4">Missing ingredients</h3>
+    <Stack component="div" className={recipeStyles.recipeColumn}>
+        <Typography variant="h6" className="uppercase mb-4">Missing ingredients</Typography>
 
-        <div className="flex flex-col gap-6">
+      <Stack component="div" spacing={2}>
           {groupedRecipes.map((group) => (
             <div key={group.missingCount} className="flex items-start gap-5">
               <div className="text-xl font-mono w-6 text-right">
                 {group.missingCount}
               </div>
 
-              <div className="pl-2">
-                <ul className="flex flex-col">
+              <Stack component="ul" spacing={1}>
                   {group.recipes.map((r) => (
                     <li key={r.id}>
-                      <a
-                        href="#"
+                      <button
+                        className="lowercase text-xl text-white hover:text-gray-200"
                         onClick={(e) => {
                           e.preventDefault();
                           onSelectRecipe(r);
                         }}
                       >
                         {r.title}
-                      </a>
+                      </button>
                     </li>
                   ))}
-                </ul>
-              </div>
+                </Stack>
             </div>
           ))}
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </Stack>
   );
 }

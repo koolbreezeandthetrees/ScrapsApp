@@ -8,6 +8,7 @@ import { CategoryRecipe, FullRecipeWithMissingInfo } from "@/types/types";
 import CategoryList from "./_components/CategoryList";
 import RecipeDetails from "./_components/RecipeDetails";
 import RecipeList from "./_components/RecipeList";
+import { Stack } from "@mui/material";
 
 
 export default function CalculatePage() {
@@ -53,7 +54,12 @@ export default function CalculatePage() {
   }, [filteredByCategory]);
 
   return (
-    <div className="recipe-container-lists">
+    <Stack
+      direction="row"
+      alignItems="flex-start"
+      width={"100%"}
+      className="gap-5 box-border max-w-[1450px] mx-auto text-lg px-4 py-8 flex justify-start"
+    >
       <CategoryList
         categories={categories}
         onSelectCategory={setSelectedCategoryId}
@@ -65,6 +71,8 @@ export default function CalculatePage() {
         onSelectRecipe={setSelectedRecipe}
       />
       <RecipeDetails recipe={selectedRecipe} />
-    </div>
+    </Stack>
   );
 }
+
+
