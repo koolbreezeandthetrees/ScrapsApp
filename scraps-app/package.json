@@ -22,7 +22,7 @@
     "@mui/icons-material": "^7.0.1",
     "@mui/joy": "^5.0.0-beta.51",
     "@mui/material": "^7.0.1",
-    "@phosphor-icons/react": "^2.1.7",
+    "@phosphor-icons/react": "^2.1.10",
     "@uploadthing/react": "^7.3.0",
     "clean": "^4.0.2",
     "dotenv": "^16.4.7",

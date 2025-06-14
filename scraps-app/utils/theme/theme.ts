@@ -39,6 +39,28 @@ const theme = createTheme({
     fontFamily: "Inconsolata, Arial, sans-serif",
   },
   components: {
+    MuiIconButton: {
+      defaultProps: {
+        disableRipple: true,
+        disableFocusRipple: true,
+      },
+      styleOverrides: {
+        root: {
+          cursor: "pointer",
+          color: "#FFF5EE", // seashell
+          "&:hover": {
+            color: "#e5dfdb", // dimmed off white
+          },
+          "&:active": {
+            color: "#e5dfdb", // dimmed off white
+          },
+          "&.Mui-disabled": {
+            color: "#C7B56C", // ecru
+            cursor: "not-allowed",
+          },
+        },
+      },
+    },
     MuiButton: {
       defaultProps: {
         disableRipple: true,
