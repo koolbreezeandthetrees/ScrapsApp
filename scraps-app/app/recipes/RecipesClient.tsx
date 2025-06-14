@@ -3,13 +3,30 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Stack from "@mui/material/Stack";
+import { Button, IconButton, Typography } from "@mui/material";
 import { CategoryRecipe, FullRecipe, Ingredient, Unit } from "@/types/types";
-
 import { RecipeForm } from "@/app/recipes/_components/RecipeForm/RecipeForm";
 import { useRecipeForm } from "@/app/recipes/_components/RecipeForm/useRecipeForm";
 import { getAllIngredients } from "@/app/actions/ingredients";
 import { getUnitList } from "@/app/actions/common";
 import { createRecipe } from "@/app/actions/recipes";
+import { PenSquare } from "lucide-react";
+
+// Centralized Tailwind class strings for reuse
+const styles = {
+  listsContainer: "px-4 py-8 flex gap-5 justify-start",
+  categoryColumn: "flex flex-col gap-4 w-48",
+  // Always show border between categories and recipes
+  recipeColumn:
+    "w-[530px] flex-shrink flex flex-col gap-2 border-l-2 border-white pl-8",
+  detailColumn: "flex-1 relative flex flex-col gap-4 pl-8",
+  detailBorder: "border-l-2 border-white",
+  detailItem: "flex flex-col gap-2",
+  greyText: "text-[#e5dfdb] text-lg",
+  greyList: "text-[#e5dfdb] text-lg",
+  formContainer: "flex flex-col gap-5 rounded-lg bg-white/20 p-8 mt-8",
+};
 
 interface RecipesClientProps {
   categories: CategoryRecipe[];
@@ -21,7 +38,6 @@ export default function RecipesClient({
   recipes,
 }: RecipesClientProps) {
   const router = useRouter();
-
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
@@ -60,7 +76,6 @@ export default function RecipesClient({
       setAllUnits(units);
       setFormReady(true);
     }
-
     fetchFormData();
   }, []);
 
@@ -69,26 +84,10 @@ export default function RecipesClient({
     return recipes.filter((r) => r.category.id === selectedCategoryId);
   }, [selectedCategoryId, recipes]);
 
-  function handleCategoryClick(catId: number) {
-    setSelectedCategoryId(catId);
-    setSelectedRecipe(null);
-  }
+  const toggleAddForm = () => setShowAddForm((prev) => !prev);
 
-  function handleRecipeClick(recipe: FullRecipe) {
-    setSelectedRecipe(recipe);
-  }
-
-  function handleEditClick(recipeId: number) {
-    router.push(`/recipes/${recipeId}/edit`);
-  }
-
-  function toggleAddForm() {
-    setShowAddForm((prev) => !prev);
-  }
-
-  async function handleCreateRecipe(e: React.FormEvent) {
+  const handleCreateRecipe = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const form = new FormData();
     form.append("title", formData.title);
     form.append("method", formData.method);
@@ -103,138 +102,149 @@ export default function RecipesClient({
       if (result?.success) {
         alert("Recipe created!");
         setShowAddForm(false);
-        router.refresh(); // re-fetch server data
+        router.refresh();
       } else {
         alert("Failed to create recipe.");
       }
-    } catch (err) {
-      console.error("Create error:", err);
+    } catch {
       alert("Something went wrong.");
     }
-  }
+  };
 
   return (
     <>
-      {/* ===== Three-column layout at the top ===== */}
-      <div className="recipe-container-lists">
+      {/* Top three-column layout */}
+      <Stack
+        direction="row"
+        alignItems="flex-start"
+        className={styles.listsContainer}
+      >
         {/* Column 1: Categories */}
-        <div className="row-cat">
-          <ul className="row-cat-list">
-            {categories.map((cat) => (
-              <li key={cat.id}>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCategoryClick(cat.id);
-                  }}
-                  className="lowercase"
-                >
-                  {cat.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Stack component="ul" className={styles.categoryColumn}>
+          {categories.map((cat) => (
+            <li key={cat.id}>
+              <button
+                onClick={() => {
+                  setSelectedCategoryId(cat.id);
+                  setSelectedRecipe(null);
+                }}
+                className="lowercase text-xl text-white hover:text-gray-200"
+              >
+                {cat.name}
+              </button>
+            </li>
+          ))}
+        </Stack>
 
         {/* Column 2: Recipe List */}
-        <div className="row-recipe">
-          <div id="recipe-list">
-            {selectedCategoryId == null ? (
-              <p>Please select a category.</p>
-            ) : filteredRecipes.length > 0 ? (
-              <ul>
-                {filteredRecipes.map((r) => (
-                  <li key={r.id}>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleRecipeClick(r);
-                      }}
-                    >
-                      {r.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No recipes found for this category.</p>
-            )}
-          </div>
-        </div>
+        <Stack component="div" className={styles.recipeColumn}>
+          {selectedCategoryId == null ? (
+            <Typography>Please select a category.</Typography>
+          ) : filteredRecipes.length > 0 ? (
+            <Stack component="ul" spacing={1}>
+              {filteredRecipes.map((r) => (
+                <li key={r.id}>
+                  <button
+                    onClick={() => setSelectedRecipe(r)}
+                    className="lowercase text-xl text-white hover:text-gray-200"
+                  >
+                    {r.title}
+                  </button>
+                </li>
+              ))}
+            </Stack>
+          ) : (
+            <Typography>No recipes found for this category.</Typography>
+          )}
+        </Stack>
 
         {/* Column 3: Recipe Details */}
-        <div className="row-detail">
-          <div id="recipe-details" className="recipe-details">
-            {selectedRecipe && (
-              <>
-                <h2 className="uppercase">{selectedRecipe.title}</h2>
-
-                <div className="details-item">
-                  <h3>Method:</h3>
-                  <p>{selectedRecipe.method}</p>
-                </div>
-
-                <div className="details-item">
-                  <h3>Ingredients:</h3>
-                  <ul>
-                    {selectedRecipe.ingredients.map((ing, idx) => (
-                      <li key={idx} className="grey-list">
-                        {ing.quantityNeeded} {ing.unit.abbreviation}{" "}
-                        {ing.ingredient.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="details-item">
-                  <h3>Difficulty:</h3>
-                  <p>{selectedRecipe.difficultyLevel}</p>
-                </div>
-
-                <div className="details-item">
-                  <h3>Time:</h3>
-                  <p>{selectedRecipe.time} minutes</p>
-                </div>
-
-                <div className="details-item">
-                  <h3>Servings:</h3>
-                  <p>{selectedRecipe.servings}</p>
-                </div>
-
-                <Image
-                  src={selectedRecipe.image || "/placeholder-image.jpg"}
-                  alt="Recipe"
-                  height={400}
-                  width={400}
-                />
-
-                <div
-                  className="pencil-icon-container clickable"
-                  onClick={() => handleEditClick(selectedRecipe.id)}
-                >
-                  <Image
-                    src="/icons/edit.svg"
-                    alt="Edit Recipe Icon"
-                    width={15}
-                    height={15}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ===== Add New Recipe Form is rendered at the bottom ===== */}
-      {showAddForm && formReady && (
-        <div
-          style={{ marginTop: "2rem" }}
-          className="edit-recipe-form-container"
-          id="recipe-form"
+        <Stack
+          className={`${styles.detailColumn} ${
+            selectedRecipe ? styles.detailBorder : ""
+          }`}
         >
-          <h2>Add New Recipe</h2>
+          {selectedRecipe && (
+            <>
+              <Typography variant="h4" className="uppercase text-white">
+                {selectedRecipe.title}
+              </Typography>
+
+              {/* Method */}
+              <Stack className={styles.detailItem}>
+                <Typography variant="h6" className="text-white">
+                  Method:
+                </Typography>
+                <Typography className={styles.greyText}>
+                  {selectedRecipe.method}
+                </Typography>
+              </Stack>
+
+              {/* Ingredients */}
+              <Stack className={styles.detailItem}>
+                <Typography variant="h6" className="text-white">
+                  Ingredients:
+                </Typography>
+                <ul className="list-none pl-0 space-y-0.5">
+                  {selectedRecipe.ingredients.map((ing, idx) => (
+                    <li key={idx} className={styles.greyList}>
+                      {ing.quantityNeeded} {ing.unit.abbreviation}{" "}
+                      {ing.ingredient.name}
+                    </li>
+                  ))}
+                </ul>
+              </Stack>
+
+              {/* Difficulty, Time, Servings */}
+              {["Difficulty", "Time", "Servings"].map((label) => (
+                <Stack key={label} className={styles.detailItem}>
+                  <Typography variant="h6" className="text-white">
+                    {label}:
+                  </Typography>
+                  <Typography className={styles.greyText}>
+                    {label === "Difficulty"
+                      ? selectedRecipe.difficultyLevel
+                      : label === "Time"
+                      ? `${selectedRecipe.time} minutes`
+                      : selectedRecipe.servings}
+                  </Typography>
+                </Stack>
+              ))}
+
+              {/* Image */}
+              <Image
+                src={selectedRecipe.image || "/placeholder-image.jpg"}
+                alt="Recipe image"
+                width={400}
+                height={400}
+                className="mt-4 rounded-lg"
+              />
+
+              {/* Edit button */}
+              <IconButton
+                onClick={() =>
+                  router.push(`/recipes/${selectedRecipe.id}/edit`)
+                }
+                className="absolute top-2 right-2 z-10 hover:scale-110 transition-transform"
+                size="small"
+              >
+                <PenSquare size={16} className="text-white" />
+              </IconButton>
+            </>
+          )}
+        </Stack>
+      </Stack>
+
+      {/* Add New Recipe Form */}
+      {showAddForm && formReady && (
+        <Stack
+          component="form"
+          onSubmit={handleCreateRecipe}
+          className={styles.formContainer}
+        >
+          <Typography variant="h5" className="text-white">
+            Add New Recipe
+          </Typography>
           <RecipeForm
             formData={formData}
             setFormData={setFormData}
@@ -244,24 +254,31 @@ export default function RecipesClient({
             ingredients={allIngredients}
             units={allUnits}
             recipeIngredients={recipeIngredients}
-            onAddIngredient={(ingredient, unitId, quantity) =>
-              handleAddIngredient(ingredient, unitId, quantity, allUnits)
+            onSubmit={handleCreateRecipe}
+            onAddIngredient={(ing, uid, qty) =>
+              handleAddIngredient(ing, uid, qty, allUnits)
             }
             onRemoveIngredient={handleRemoveIngredient}
-            onSubmit={handleCreateRecipe}
             submitLabel="Create Recipe"
           />
-        </div>
+        </Stack>
       )}
 
-      {/* Floating button to toggle form */}
-      <button
-        id="button"
-        className="button floating-btn"
+      <Button
+        variant="contained"
+        color="info"
         onClick={toggleAddForm}
+        sx={{
+          position: "fixed",
+          bottom: "50px",
+          right: "70px",
+          zIndex: 1000,
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+        }}
       >
         {showAddForm ? "Close" : "+ Add Recipe"}
-      </button>
+      </Button>
     </>
   );
 }
+

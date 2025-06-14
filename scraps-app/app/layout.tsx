@@ -8,7 +8,7 @@ import "./_styles/globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, Stack } from "@mui/material";
 import createEmotionCache from "@/utils/emotionCache";
 import { CacheProvider } from "@emotion/react";
 import theme from "@/utils/theme/theme";
@@ -266,7 +266,16 @@ export default function RootLayout({
               <SignedIn>
                 <Header />
               </SignedIn>
-              <div className="container">{children}</div>
+              <Stack
+                maxWidth="1400px"
+                mx="auto"
+                width={"100%"}
+                justifyContent={"start"}
+                pt={8}
+                px={4}
+              >
+                {children}
+              </Stack>
               <Footer />
             </ThemeProvider>
           </CacheProvider>
