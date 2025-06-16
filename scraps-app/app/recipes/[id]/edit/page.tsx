@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   getRecipeById,
@@ -11,8 +11,8 @@ import { getAllIngredients } from "@/app/actions/ingredients";
 import { getAllRecipeCategories } from "@/app/actions/recipes";
 import { getUnitList } from "@/app/actions/common";
 import { Ingredient, Unit, CategoryRecipe } from "@/types/types";
-import { useRecipeForm } from "../../_components/RecipeForm/useRecipeForm";
-import { RecipeForm } from "../../_components/RecipeForm/RecipeForm";
+import { useRecipeForm } from "@/app/recipes/_components/RecipeForm/useRecipeForm";
+import { RecipeForm } from "@/app/recipes/_components/RecipeForm/RecipeForm";
 
 export default function EditRecipePage() {
   const { id } = useParams();
@@ -24,6 +24,9 @@ export default function EditRecipePage() {
   const [units, setUnits] = useState<Unit[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Ref to guard against React StrictMode / Fast Refresh double-run
+  const hasSeeded = useRef(false);
+
   const {
     formData,
     setFormData,
@@ -32,57 +35,69 @@ export default function EditRecipePage() {
     recipeIngredients,
     handleAddIngredient,
     handleRemoveIngredient,
-  } = useRecipeForm({});
+  } = useRecipeForm({
+    initialFormData: {
+      title: "",
+      method: "",
+      difficultyLevel: "easy",
+      time: 0,
+      servings: 0,
+      categoryRecipeId: "",
+    },
+  });
 
- useEffect(() => {
-   async function fetchData() {
-     try {
-       const [recipeData, catData, unitData, ingredientData] =
-         await Promise.all([
-           getRecipeById(recipeId),
-           getAllRecipeCategories(),
-           getUnitList(),
-           getAllIngredients(),
-         ]);
+  useEffect(() => {
+    // bail out if we've already seeded once
+    if (hasSeeded.current) return;
+    hasSeeded.current = true;
 
-       if (!recipeData) {
-         console.error("Recipe not found");
-         return;
-       }
+    async function fetchData() {
+      try {
+        const [recipeData, catData, unitData, ingredientData] =
+          await Promise.all([
+            getRecipeById(recipeId),
+            getAllRecipeCategories(),
+            getUnitList(),
+            getAllIngredients(),
+          ]);
 
-       // Set all data before we process ingredients
-       setFormData({
-         title: recipeData.title,
-         method: recipeData.method,
-         difficultyLevel: recipeData.difficultyLevel,
-         time: recipeData.time,
-         servings: recipeData.servings,
-         categoryRecipeId: recipeData.category.id.toString(),
-       });
-       setImageUrl(recipeData.image || "");
-       setCategories(catData);
-       setIngredients(ingredientData);
-       setUnits(unitData);
+        if (!recipeData) {
+          console.error("Recipe not found");
+          return;
+        }
 
-       // ✅ Now that units are set, we can safely add recipe ingredients
-       recipeData.ingredients.forEach((ri) => {
-         handleAddIngredient(
-           ri.ingredient,
-           ri.unit.id,
-           ri.quantityNeeded,
-           unitData
-         );
-       });
-     } catch (err) {
-       console.error("Failed to load recipe data", err);
-     } finally {
-       setLoading(false);
-     }
-   }
+        // Populate form fields
+        setFormData({
+          title: recipeData.title,
+          method: recipeData.method,
+          difficultyLevel: recipeData.difficultyLevel,
+          time: recipeData.time,
+          servings: recipeData.servings,
+          categoryRecipeId: recipeData.category.id.toString(),
+        });
+        setImageUrl(recipeData.image || "");
+        setCategories(catData);
+        setIngredients(ingredientData);
+        setUnits(unitData);
 
-   fetchData();
- }, [handleAddIngredient, recipeId, setFormData, setImageUrl]);
+        // Seed ingredients exactly once
+        recipeData.ingredients.forEach((ri) => {
+          handleAddIngredient(
+            ri.ingredient,
+            ri.unit.id,
+            ri.quantityNeeded,
+            unitData
+          );
+        });
+      } catch (err) {
+        console.error("Failed to load recipe data", err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
+    fetchData();
+  }, [recipeId, setFormData, setImageUrl, handleAddIngredient]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -109,7 +124,7 @@ export default function EditRecipePage() {
   if (loading) return <p>Loading...</p>;
 
   return (
-       <div className="edit-recipe-form-container" id="recipe-form">
+    <div className="edit-recipe-form-container" id="recipe-form">
       <h1>Edit Recipe</h1>
       <RecipeForm
         formData={formData}
@@ -120,8 +135,8 @@ export default function EditRecipePage() {
         ingredients={ingredients}
         units={units}
         recipeIngredients={recipeIngredients}
-        onAddIngredient={(ingredient, unitId, quantity) =>
-          handleAddIngredient(ingredient, unitId, quantity, units)
+        onAddIngredient={(ing, uid, qty) =>
+          handleAddIngredient(ing, uid, qty, units)
         }
         onRemoveIngredient={handleRemoveIngredient}
         onSubmit={handleSubmit}

@@ -241,7 +241,6 @@ export default function RecipesClient({
       {/* Add New Recipe Form */}
       {showAddForm && formReady && (
         <Stack
-          component="form"
           onSubmit={handleCreateRecipe}
           className={recipeStyles.formContainer}
         >
