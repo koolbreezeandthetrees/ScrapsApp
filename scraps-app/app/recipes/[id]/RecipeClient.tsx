@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { getRecipeById } from "@/app/actions";
 import { FullRecipe } from "@/types/types";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function RecipeClient() {
   const { id } = useParams();
@@ -38,7 +40,16 @@ export default function RecipeClient() {
   }, [id]);
 
   if (error) return <p className="text-red-500 p-4">{error}</p>;
-  if (!recipe) return <p className="p-4">Loading...</p>;
+  if (!recipe) return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="60vh"
+    >
+      <CircularProgress />
+    </Box>
+  );
 
   return (
     <div className="max-w-3xl mx-auto p-6">

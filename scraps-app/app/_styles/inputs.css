@@ -34,7 +34,7 @@ select::placeholder {
 input[type="text"], select {
     width: 100%;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 5px 10px;
 }
 
 
@@ -51,19 +51,3 @@ select {
     background-size: 12px;
 }
 
-/* edit number input field */
-.ing-filt-qty::-webkit-outer-spin-button,
-.ing-filt-qty::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.ing-filt-qty {
-    -moz-appearance: textfield;
-}
-
-.ing-filt-qty {
-    width: 30px;
-    text-align: center;
-    font-size: 10px;
-}

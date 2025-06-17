@@ -15,12 +15,11 @@ export default function Header() {
   const clerk = useClerk();
 
   return (
-    <header>
       <Stack
-        component="nav"
         direction="row"
         justifyContent="space-between"
-        alignItems="center"
+      alignItems="center"
+      width={"100%"}
         maxWidth="1500px"
         className="pt-2 px-8 mx-auto"
       >
@@ -65,6 +64,5 @@ export default function Header() {
           </Stack>
         </SignedIn>
       </Stack>
-    </header>
   );
 }

@@ -1,5 +1,3 @@
-// scraps-app/app/inventory/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,7 +13,7 @@ import { getIngredientById } from "@/app/actions/ingredients";
 import IngredientForm from "./_components/IngredientForm";
 import CategoryColumn from "./_components/CategoryColumn";
 import { CategoryIngredient, InventoryItem } from "@/types/types";
-import { Button, CircularProgress, Stack } from "@mui/material";
+import { Box, Button, CircularProgress, Stack } from "@mui/material";
 
 export default function InventoryPage() {
   const { user } = useUser();
@@ -198,7 +196,11 @@ return (
     </Button>
 
     {/* ✅ Conditionally render the IngredientForm */}
-    {showIngredientForm && <IngredientForm />}
+    {showIngredientForm &&
+      <Box pb={10}>
+        <IngredientForm />
+      </Box>
+    }
   </Stack>
 );
 }

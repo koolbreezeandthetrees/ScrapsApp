@@ -1,6 +1,5 @@
 import { recipeStyles } from "@/app/recipes/RecipesClient";
 import { FullRecipeWithMissingInfo } from "@/types/types";
-import { useState, useEffect } from "react";
 import { Stack, Typography } from "@mui/material";
 
 type Props = {
@@ -19,16 +18,6 @@ export default function RecipeList({
   selectedRecipeId,
   onSelectRecipe,
 }: Props) {
-  // Local delay state
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 900); // 500ms delay
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Show spinner until delay has passed
-  if (!visible) return null; 
 
   // After delay, render normally
   if (selectedCategoryId === null) {

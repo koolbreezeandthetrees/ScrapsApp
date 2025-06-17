@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Stack from "@mui/material/Stack";
-import { Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { CategoryRecipe, FullRecipe, Ingredient, Unit } from "@/types/types";
 import { RecipeForm } from "@/app/recipes/_components/RecipeForm/RecipeForm";
 import { useRecipeForm } from "@/app/recipes/_components/RecipeForm/useRecipeForm";
@@ -161,26 +161,27 @@ export default function RecipesClient({
             <Typography variant="h6">please select a category.</Typography>
           ) : filteredRecipes.length > 0 ? (
             <Stack component="ul" spacing={1}>
-  {filteredRecipes.map((r) => {
-    const isRecipeSelected = selectedRecipe?.id === r.id;
-    return (
-      <li key={r.id}>
-        <button
-          onClick={() => setSelectedRecipe(r)}
-          className={`
+              {filteredRecipes.map((r) => {
+                const isRecipeSelected = selectedRecipe?.id === r.id;
+                return (
+                  <li key={r.id}>
+                    <button
+                      onClick={() => setSelectedRecipe(r)}
+                      className={`
             ${recipeStyles.recipeItem}
-            ${isRecipeSelected
-              ? recipeStyles.recipeItemActive
-              : recipeStyles.recipeItemInactive
+            ${
+              isRecipeSelected
+                ? recipeStyles.recipeItemActive
+                : recipeStyles.recipeItemInactive
             }
           `}
-        >
-          {r.title}
-        </button>
-      </li>
-    );
-  })}
-</Stack>
+                    >
+                      {r.title}
+                    </button>
+                  </li>
+                );
+              })}
+            </Stack>
           ) : (
             <Typography variant="h6" color="error">
               no recipes found for this category.
@@ -267,30 +268,32 @@ export default function RecipesClient({
 
       {/* Add New Recipe Form */}
       {showAddForm && formReady && (
-        <Stack
-          onSubmit={handleCreateRecipe}
-          className={recipeStyles.formContainer}
-        >
-          <Typography variant="h5" className="text-white">
-            Add New Recipe
-          </Typography>
-          <RecipeForm
-            formData={formData}
-            setFormData={setFormData}
-            imageUrl={imageUrl}
-            setImageUrl={setImageUrl}
-            categories={categories}
-            ingredients={allIngredients}
-            units={allUnits}
-            recipeIngredients={recipeIngredients}
+        <Box pb={6}>
+          <Stack
             onSubmit={handleCreateRecipe}
-            onAddIngredient={(ing, uid, qty) =>
-              handleAddIngredient(ing, uid, qty, allUnits)
-            }
-            onRemoveIngredient={handleRemoveIngredient}
-            submitLabel="Create Recipe"
-          />
-        </Stack>
+            className={recipeStyles.formContainer}
+          >
+            <Typography variant="h5" className="text-white">
+              Add New Recipe
+            </Typography>
+            <RecipeForm
+              formData={formData}
+              setFormData={setFormData}
+              imageUrl={imageUrl}
+              setImageUrl={setImageUrl}
+              categories={categories}
+              ingredients={allIngredients}
+              units={allUnits}
+              recipeIngredients={recipeIngredients}
+              onSubmit={handleCreateRecipe}
+              onAddIngredient={(ing, uid, qty) =>
+                handleAddIngredient(ing, uid, qty, allUnits)
+              }
+              onRemoveIngredient={handleRemoveIngredient}
+              submitLabel="Create Recipe"
+            />
+          </Stack>
+        </Box>
       )}
 
       <Button

@@ -68,7 +68,7 @@ export function RecipeForm({
 
   return (
     <form onSubmit={onSubmit} encType="multipart/form-data">
-      <div className="form-input-container">
+      <Stack spacing={2}>
         <label htmlFor="title">Title</label>
         <input
           type="text"
@@ -214,7 +214,7 @@ export function RecipeForm({
         >
           {submitLabel}
         </Button>
-      </div>
+      </Stack>
     </form>
   );
 }

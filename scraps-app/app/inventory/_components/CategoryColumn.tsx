@@ -128,18 +128,25 @@ export default function CategoryColumn({
 
           {/* Add ingredients  */}
           <Stack spacing={1} mt={1}>
-            <h5>Select ingredient:</h5>
+            <Typography
+              variant="body1"
+              className="mb-1"
+            >
+              Select ingredient:
+            </Typography>
             {filteredIngredients.length > 0 && (
               <ul>
                 {filteredIngredients.map((ingredient) => (
+  
                   <li
                     key={ingredient.id}
-                    className="inv-list-bottom-filt-ing-item"
+                    className="flex gap-3 text-sm justify-between"
                   >
                     {ingredient.name}
                     {/* Add button */}
                     <button
-                      className="ing-filt-btn small-btn grow-element-slow"
+                      // add tailwind styling for text size and color
+                      className="text-xs text-white hover:text-yellow-500 px-2 py-1"
                       onClick={() =>
                         onAddIngredient(
                           category.id,

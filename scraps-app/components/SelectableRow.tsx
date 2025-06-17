@@ -19,7 +19,7 @@ export function SelectableRow<T>({
 }: SelectableRowProps<T>) {
   return (
     <div
-      className="selectable-row"
+      className="flex gap-4 flex-wrap mb-4"
       role="radiogroup"
       aria-labelledby={`${name}-label`}
     >

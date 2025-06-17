@@ -8,27 +8,45 @@ import { CategoryRecipe, FullRecipeWithMissingInfo } from "@/types/types";
 import CategoryList from "./_components/CategoryList";
 import RecipeDetails from "./_components/RecipeDetails";
 import RecipeList from "./_components/RecipeList";
-import { Stack } from "@mui/material";
+import { Stack, Box, CircularProgress } from "@mui/material";
 
 export default function CalculatePage() {
   const { user } = useUser();
   const [categories, setCategories] = useState<CategoryRecipe[]>([]);
   const [recipes, setRecipes] = useState<FullRecipeWithMissingInfo[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<FullRecipeWithMissingInfo | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
+  const [selectedRecipe, setSelectedRecipe] =
+    useState<FullRecipeWithMissingInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!user?.id) return;
+    // if there's no signed-in user, bail out
+    if (!user?.id) {
+      setIsLoading(false);
+      return;
+    }
+
+    // now TS knows `user.id` is a string
+    const userId = user.id;
 
     async function fetchData() {
-      const catData = await getAllRecipeCategories();
-      const recipeData = user ? await getAllCalculatedRecipes(user.id) : [];
-      setCategories(catData);
-      setRecipes(recipeData);
+      setIsLoading(true);
+      try {
+        const [catData, recipeData] = await Promise.all([
+          getAllRecipeCategories(),
+          getAllCalculatedRecipes(userId),
+        ]);
+        setCategories(catData);
+        setRecipes(recipeData);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     fetchData();
-  }, [user]);
+  }, [user?.id]);
 
   const filteredByCategory = useMemo(() => {
     if (selectedCategoryId === null) return [];
@@ -45,6 +63,19 @@ export default function CalculatePage() {
       .sort(([a], [b]) => Number(a) - Number(b))
       .map(([count, recs]) => ({ missingCount: Number(count), recipes: recs }));
   }, [filteredByCategory]);
+
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="60vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Stack

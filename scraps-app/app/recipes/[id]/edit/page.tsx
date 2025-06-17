@@ -13,6 +13,8 @@ import { getUnitList } from "@/app/actions/common";
 import { Ingredient, Unit, CategoryRecipe } from "@/types/types";
 import { useRecipeForm } from "@/app/recipes/_components/RecipeForm/useRecipeForm";
 import { RecipeForm } from "@/app/recipes/_components/RecipeForm/RecipeForm";
+import Stack from "@mui/material/Stack";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 export default function EditRecipePage() {
   const { id } = useParams();
@@ -121,11 +123,26 @@ export default function EditRecipePage() {
     }
   }
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="60vh"
+    >
+      <CircularProgress />
+    </Box>
+  );
 
   return (
-    <div className="edit-recipe-form-container" id="recipe-form">
-      <h1>Edit Recipe</h1>
+    <Stack
+      spacing={4}
+      borderRadius={2}
+      padding={4}
+      margin="0 auto"
+      sx={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }}
+    >
+      <Typography variant="h6">Edit Recipe</Typography>
       <RecipeForm
         formData={formData}
         setFormData={setFormData}
@@ -142,6 +159,6 @@ export default function EditRecipePage() {
         onSubmit={handleSubmit}
         submitLabel="Update Recipe"
       />
-    </div>
+    </Stack>
   );
 }
