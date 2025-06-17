@@ -1,38 +1,39 @@
 import "@fontsource/inconsolata";
 import { createTheme } from "@mui/material/styles";
+import { BLUE, DARKEN_BLUE, DARKEN_YELLOW, DIMMED_OFF_WHITE, DIMMED_ORANGE, ECRU, INDIAN_RED, SAGE, SEASHELL, YELLOW } from "./gloabalStyles";
 
 const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#e4dc42", // bright yellow
+      main: YELLOW,
       contrastText: "#fff",
     },
     secondary: {
-      main: "#748fb8", // blue
+      main: BLUE,
       contrastText: "#fff",
     },
     error: {
-      main: "#C06E5E", // indian red
+      main: INDIAN_RED,
       contrastText: "#fff",
     },
     warning: {
-      main: "#CE8647", // dimmed orange
+      main: DIMMED_ORANGE,
     },
     info: {
-      main: "#e5dfdb", // dimmed off white
+      main: DIMMED_OFF_WHITE,
     },
     success: {
-      main: "#ACB67D", // sage
+      main: SAGE,
       contrastText: "#fff",
     },
     background: {
-      default: "#C7B56C", // ecru
+      default: ECRU,
       paper: "rgba(255, 255, 255, 0.14)",
     },
     text: {
-      primary: "#FFF5EE", // seashell
-      secondary: "#e5dfdb", // dimmed off white
+      primary: SEASHELL,
+      secondary: DIMMED_OFF_WHITE,
     },
   },
   typography: {
@@ -47,15 +48,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           cursor: "pointer",
-          color: "#FFF5EE", // seashell
+          color: SEASHELL,
           "&:hover": {
-            color: "#e5dfdb", // dimmed off white
+            color: DIMMED_OFF_WHITE,
           },
           "&:active": {
-            color: "#e5dfdb", // dimmed off white
+            color: DIMMED_OFF_WHITE,
           },
           "&.Mui-disabled": {
-            color: "#C7B56C", // ecru
+            color: ECRU,
             cursor: "not-allowed",
           },
         },
@@ -72,49 +73,49 @@ const theme = createTheme({
           textTransform: "none",
         },
         containedPrimary: {
-          backgroundColor: "#e4dc42", // bright yellow
+          backgroundColor: YELLOW, // bright yellow
           color: "#fff",
           fontWeight: "bold",
           minWidth: "200px", // ? maybe not ???
           padding: "10px 20px",
           borderRadius: "50px",
           "&:hover": {
-            backgroundColor: "#d1cc3b", // darken yellow
+            backgroundColor: DARKEN_YELLOW, // darken yellow
           },
         },
         containedSecondary: {
-          backgroundColor: "#748fb8", // blue
+          backgroundColor: BLUE, // blue
           color: "#fff",
           fontWeight: "bold",
           minWidth: "200px", // ? maybe not ???
           padding: "10px 20px",
           borderRadius: "50px",
           "&:hover": {
-            backgroundColor: "#5f779d", // darken blue
+            backgroundColor: DARKEN_BLUE, // darken blue
           },
         },
         containedInfo: {
           // backgroundColor: "#FFF5EE", // dimmed off white
-          color: "#C7B56C",
+          color: ECRU,
           fontWeight: "bold",
           minWidth: "200px",
           padding: "10px 20px",
           borderRadius: "50px",
           "&:hover": {
-            backgroundColor: "#E4DC42",
+            backgroundColor: YELLOW,
             color: "white",
           },
         },
         text: {
           backgroundColor: "transparent",
-          color: "#FFF5EE",
+          color: SEASHELL,
           padding: "4px 6px",
           fontSize: "1.1rem",
           "&:hover": {
-            color: "#e5dfdb",
+            color: DIMMED_OFF_WHITE,
           },
           "&:active": {
-            color: "#e5dfdb",
+            color: DIMMED_OFF_WHITE,
           },
         },
       },

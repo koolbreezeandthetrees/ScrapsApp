@@ -1,0 +1,10 @@
+export const DARKEN_YELLOW = "#d1cc3b"; // darken yellow
+export const DARKEN_BLUE = "#5f779d"; // darken blue
+export const YELLOW = "#DBD446"; // light yellow
+export const BLUE = "#748fb8"; // light blue
+export const INDIAN_RED = "#C06E5E"; // light indian red
+export const DIMMED_ORANGE = "#CE8647"; // light dimmed orange
+export const DIMMED_OFF_WHITE = "#e5dfdb"; // light dimmed off white
+export const SAGE = "#ACB67D"; // light sage
+export const ECRU = "#C7B56C"; // light ecru
+export const SEASHELL = "#FFF5EE"; // light seashell

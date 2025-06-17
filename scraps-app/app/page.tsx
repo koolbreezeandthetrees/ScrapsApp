@@ -55,15 +55,15 @@ export default function Home() {
         >
           <Stack
             spacing={2}
-            justifyContent="flex-start"
-            alignItems={{ xs: "center", md: "flex-start" }}
+            justifyContent="center"
+            alignItems={"center"}
           >
             <Typography variant="h3" component="h1">
               Welcome to Scraps
             </Typography>
             <Typography
               variant="h6"
-              color="text.primary"
+              color="text.secondary"
               align="center"
               sx={{
                 textAlign: { xs: "center", md: "left" },

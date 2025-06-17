@@ -12,6 +12,7 @@ import { CssBaseline, Stack } from "@mui/material";
 import createEmotionCache from "@/utils/emotionCache";
 import { CacheProvider } from "@emotion/react";
 import theme from "@/utils/theme/theme";
+import { DARKEN_YELLOW, DIMMED_OFF_WHITE, ECRU, SEASHELL, YELLOW } from "@/utils/theme/gloabalStyles";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -24,7 +25,7 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: "#FFF5EE",
+          colorPrimary: SEASHELL,
           fontFamily: "'Inter', sans-serif",
         },
         elements: {
@@ -40,66 +41,67 @@ export default function RootLayout({
           },
 
           headerSubtitle: {
-            color: "#FFF5EE", // dimmed off white
+            color: SEASHELL, // dimmed off white
           },
 
           dividerLine: {
-            backgroundColor: "#e5dfdb", // dimmed off white
+            backgroundColor: DIMMED_OFF_WHITE,
           },
 
           dividerText: {
-            color: "#e5dfdb", // dimmed off white
+            color: DIMMED_OFF_WHITE,
           },
 
           // 2) Input fields: light border, no inner shadow
           formFieldInput: {
             backgroundColor: "transparent",
-            borderColor: "#FFF5EE",
+            borderColor: SEASHELL,
             borderWidth: "1px",
             boxShadow: "none",
             /* override the data-variant rule too: */
             '&[data-variant="default"]': {
               boxShadow: "none",
               borderWidth: "1px",
-              borderColor: "#FFF5EE",
+              borderColor: DIMMED_OFF_WHITE,
             },
             /* and on focus: */
             "&:focus-within": {
               boxShadow: "none",
-              borderColor: "#FFF5EE",
+              borderColor: SEASHELL,
             },
           },
           // keep your labels ivory
           formFieldLabel: {
             fontWeight: 600,
-            color: "#FFF5EE",
+            color: SEASHELL,
           },
 
           // primary submit button stays as you had it
           formButtonPrimary: {
-            backgroundColor: "#e4dc42",
-            borderColor: "#e4dc42",
-            color: "#FFF5EE",
+            backgroundColor: YELLOW,
+            borderColor: YELLOW,
+            color: "#fff",
+            fontSize: "1rem",
             padding: "0.75rem 1.5rem",
             borderRadius: "8px",
             textTransform: "none",
 
             // ← add a nested rule for hover, focus, active
             "&:hover, &:focus, &:active": {
-              backgroundColor: "#d1cc3b",
-              borderColor: "#d1cc3b",
-              color: "#FFF5EE",
+              backgroundColor: DARKEN_YELLOW,
+              borderColor: DARKEN_YELLOW,
+              color: SEASHELL,
             },
             '&[data-variant="solid"][data-color="primary"]': {
               boxShadow: "none",
               borderWidth: "1px",
-              borderColor: "#e4dc42",
+              borderColor: YELLOW,
             },
           },
 
           // headings in the forms
           headerTitle: {
-            color: "#FFF5EE",
+            color: SEASHELL,
           },
 
           // social buttons with white bg
@@ -126,20 +128,20 @@ export default function RootLayout({
             padding: "1rem",
           },
           userButtonPopoverMain: {
-            color: "#FFF5EE",
+            color: SEASHELL,
             backgroundColor: "rgba(0, 0, 0, 0.1)",
           },
           userPreviewMainIdentifierText: {
-            color: "#FFF5EE",
+            color: SEASHELL,
           },
           userPreviewSecondaryIdentifier: {
-            color: "#e5dfdb",
+            color: DIMMED_OFF_WHITE,
           },
           userButtonPopoverActionButton: {
             // make “Manage account” + “Sign out” look like ghost⬦but ivory text
             backgroundColor: "transparent",
-            border: "1px solid #FFF5EE",
-            color: "#FFF5EE",
+            border: `1px solid ${SEASHELL}`,
+            color: SEASHELL,
             "&:hover": {
               backgroundColor: "rgba(255,255,255,0.1)",
             },
@@ -149,12 +151,12 @@ export default function RootLayout({
           },
           // —— Profile Page container + header ——
           pageScrollBox: {
-            backgroundColor: "#C7B56C",
+            backgroundColor: ECRU,
             boxShadow: "none",
           },
           profilePage: {
             backgroundColor: "transparent",
-            color: "#FFF5EE",
+            color: SEASHELL,
           },
           header: {
             backgroundColor: "transparent",
@@ -163,7 +165,7 @@ export default function RootLayout({
 
           // —— Section wrappers ——
           profileSection: {
-            backgroundColor: "#C7B56C",
+            backgroundColor: ECRU,
             boxShadow: "none",
             borderRadius: "12px",
             padding: "1rem",
@@ -173,19 +175,19 @@ export default function RootLayout({
             marginBottom: "0.5rem",
           },
           profileSectionTitleText: {
-            color: "#e5dfdb",
+            color: DIMMED_OFF_WHITE,
             fontWeight: "600",
           },
 
           // —— Section content & items ——
           profileSectionContent: {
-            color: "#FFF5EE",
+            color: SEASHELL,
           },
           profileSectionItem: {
             "& p": {
-              color: "#FFF5EE",
+              color: SEASHELL,
             },
-            borderBottom: "1px solid #e5dfdb",
+            borderBottom: `1px solid ${DIMMED_OFF_WHITE}`,
             "&:last-of-type": {
               borderBottom: "none",
             },
@@ -195,8 +197,8 @@ export default function RootLayout({
           profileSectionPrimaryButton: {
             // ghost style with ivory border/text
             backgroundColor: "transparent",
-            border: "1px solid #FFF5EE",
-            color: "#FFF5EE",
+            border: `1px solid ${SEASHELL}`,
+            color: SEASHELL,
             "&:hover": {
               backgroundColor: "rgba(255,255,255,0.1)",
             },
@@ -204,8 +206,8 @@ export default function RootLayout({
 
           // —— Badges (e.g. “Primary”) ——
           badge: {
-            backgroundColor: "#e4dc42",
-            color: "#FFF5EE",
+            backgroundColor: YELLOW,
+            color: SEASHELL,
           },
 
           // —— Provider icons (Google, etc.) ——
@@ -218,16 +220,16 @@ export default function RootLayout({
             display: "none",
           },
           navbar: {
-            backgroundColor: "#C7B56C",
+            backgroundColor: ECRU,
             backgroundImage: "none", // kill the gradient
             boxShadow: "none",
             padding: "1rem 2rem",
           },
           navbarTitle: {
-            color: "#FFF5EE",
+            color: SEASHELL,
           },
           navbarDescription: {
-            color: "#FFF5EE",
+            color: SEASHELL,
           },
           navbarButtons: {
             backgroundColor: "transparent",
@@ -235,7 +237,7 @@ export default function RootLayout({
           },
           navbarButton: {
             backgroundColor: "transparent",
-            color: "#FFF5EE",
+            color: SEASHELL,
             borderRadius: "8px",
             "&:hover, &:focus": {
               backgroundColor: "rgba(255,255,255,0.1)",
