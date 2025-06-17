@@ -19,10 +19,10 @@ export const recipeStyles = {
   categoryColumn:
     "flex flex-row flex-wrap gap-4 justify-start w-full md:flex-col md:w-48",
   categoryItem: "lowercase text-xl whitespace-nowrap hover:text-gray-200",
-  categoryItemActive: "text-[#e4dc42] font-semibold",
+  categoryItemActive: "text-[#87756E] font-semibold",
   categoryItemInactive: "text-white",
   recipeItem: "lowercase text-xl whitespace-nowrap hover:text-gray-200",
-  recipeItemActive: "text-[#e4dc42] font-semibold",
+  recipeItemActive: "text-[#87756E] font-semibold",
   recipeItemInactive: "text-white",
   recipeColumn:
     "w-full md:w-[530px] flex-shrink flex flex-col gap-2 border-t-2 border-white pt-4 md:pt-0 md:border-t-0 md:border-l-2 md:pl-8",

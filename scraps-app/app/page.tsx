@@ -3,7 +3,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { Button, Typography, Box, Stack, NoSsr } from "@mui/material";
-import Image from "next/image";
+import { Refrigerator } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -18,57 +18,25 @@ export default function Home() {
 
   return (
     <NoSsr>
-      <Stack
-        component="main"
-        direction={{ xs: "column", md: "row" }}
-        spacing={{ xs: 2, md: 4 }}
-        alignItems="center"
-        justifyContent="center"
-        sx={{
-          minHeight: "70vh",
-          mx: "auto",
-          px: 4,
-        }}
-      >
-        {/* Illustration Column */}
-        <Box
-          sx={{
-            position: "relative",
-            width: "100%",
-            maxWidth: 800,
-          }}
-        >
-          <Image
-            src="/scraps-welcome-illustration.png"
-            alt="Food ingredients illustration"
-            width={800}
-            height={600}
-          />
-        </Box>
+     <Stack
+           alignItems="center"
+           justifyContent="center"
+           spacing={3}
+           sx={{ width: "100%", minHeight: "60vh", textAlign: "center", px: 2 }}
+         >
+      
+          <Box>
+            <Refrigerator
+              size={64}
+              strokeWidth={1.5}
+              className="text-primary"
+            />
+          </Box>
 
-        {/* Welcome Panel */}
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: 800,
-          }}
-        >
-          <Stack
-            spacing={2}
-            justifyContent="center"
-            alignItems={"center"}
-          >
-            <Typography variant="h3" component="h1">
+            <Typography variant="h4" component="h1">
               Welcome to Scraps
             </Typography>
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              align="center"
-              sx={{
-                textAlign: { xs: "center", md: "left" },
-              }}
-            >
+            <Typography variant="body1" color="textSecondary" sx={{ maxWidth: 600 }}>
               Never let ingredients go to waste again: manage your inventory,
               store recipes, and automatically calculate missing items.
             </Typography>
@@ -94,8 +62,6 @@ export default function Home() {
               </Stack>
             )}
           </Stack>
-        </Box>
-      </Stack>
-    </NoSsr>
+  </NoSsr >
   );
 }
