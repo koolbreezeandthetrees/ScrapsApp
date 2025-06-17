@@ -90,7 +90,7 @@ export async function getAllRecipes(): Promise<FullRecipe[]> {
             name: row.unitName ?? "",
             abbreviation: row.unitAbbreviation ?? "",
           },
-          category: { id: 0, name: ""}, // Not included in this query
+          category: { id: 0, name: "", description: "" }, // Not included in this query
           color: { id: 0, name: "", colorCode: "" },
         },
         unit: {
@@ -171,7 +171,7 @@ export async function getRecipeById(
             name: row.unitName ?? "",
             abbreviation: row.unitAbbreviation ?? "",
           },
-          category: { id: 0, name: "" },
+          category: { id: 0, name: "", description: "" },
           color: { id: 0, name: "", colorCode: "" },
         },
         unit: {
