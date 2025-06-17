@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { getIngredientById } from "@/app/actions";
 import { Ingredient } from "@/types/types";
 import { Box, Stack, Typography, CircularProgress, Link, } from "@mui/material";
-
 import { Settings } from "lucide-react";
 
 export default function IngredientPage() {
@@ -71,7 +70,7 @@ export default function IngredientPage() {
   }
 
   if (!ingredient) {
-    return null; // Fallback safety
+    return null;
   }
 
   return (
