@@ -13,8 +13,15 @@ import { getUnitList } from "@/app/actions/common";
 import { Ingredient, Unit, CategoryRecipe } from "@/types/types";
 import { useRecipeForm } from "@/app/recipes/_components/RecipeForm/useRecipeForm";
 import { RecipeForm } from "@/app/recipes/_components/RecipeForm/RecipeForm";
-import Stack from "@mui/material/Stack";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Snackbar,
+  Alert,
+  AlertColor,
+  Stack,
+} from "@mui/material";
 
 export default function EditRecipePage() {
   const { id } = useParams();
@@ -25,6 +32,22 @@ export default function EditRecipePage() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Snackbar state
+  const [snack, setSnack] = useState<{
+    open: boolean;
+    message: string;
+    severity: AlertColor;
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const showSnack = (message: string, severity: AlertColor = "success") => {
+    setSnack({ open: true, message, severity });
+  };
+  const handleSnackClose = () => setSnack((prev) => ({ ...prev, open: false }));
 
   // Ref to guard against React StrictMode / Fast Refresh double-run
   const hasSeeded = useRef(false);
@@ -49,7 +72,6 @@ export default function EditRecipePage() {
   });
 
   useEffect(() => {
-    // bail out if we've already seeded once
     if (hasSeeded.current) return;
     hasSeeded.current = true;
 
@@ -64,7 +86,8 @@ export default function EditRecipePage() {
           ]);
 
         if (!recipeData) {
-          console.error("Recipe not found");
+          showSnack("Recipe not found", "error");
+          setLoading(false);
           return;
         }
 
@@ -93,6 +116,7 @@ export default function EditRecipePage() {
         });
       } catch (err) {
         console.error("Failed to load recipe data", err);
+        showSnack("Failed to load data", "error");
       } finally {
         setLoading(false);
       }
@@ -115,52 +139,72 @@ export default function EditRecipePage() {
     try {
       await updateRecipe(recipeId, form);
       await updateRecipeIngredients(recipeId, recipeIngredients);
-      alert("Recipe updated successfully!");
-      router.push("/recipes");
+      showSnack("Recipe updated successfully!", "success");
+      setTimeout(() => router.push("/recipes"), 800);
     } catch (err) {
       console.error("Failed to update recipe", err);
-      alert("Something went wrong.");
+      showSnack("Something went wrong", "error");
     }
   }
 
-  if (loading) return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="60vh"
-    >
-      <CircularProgress />
-    </Box>
-  );
+  if (loading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="60vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
 
   return (
-    <Stack
-      spacing={4}
-      borderRadius={2}
-      padding={4}
-      margin="0 auto"
-      sx={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }}
-    >
-      <Typography variant="h4" className="uppercase text-white">
-        Edit Recipe
-      </Typography>
-      <RecipeForm
-        formData={formData}
-        setFormData={setFormData}
-        imageUrl={imageUrl}
-        setImageUrl={setImageUrl}
-        categories={categories}
-        ingredients={ingredients}
-        units={units}
-        recipeIngredients={recipeIngredients}
-        onAddIngredient={(ing, uid, qty) =>
-          handleAddIngredient(ing, uid, qty, units)
-        }
-        onRemoveIngredient={handleRemoveIngredient}
-        onSubmit={handleSubmit}
-        submitLabel="Update Recipe"
-      />
-    </Stack>
+    <>
+      <Stack
+        spacing={4}
+        borderRadius={2}
+        padding={4}
+        margin="0 auto"
+        sx={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }}
+      >
+        <Typography variant="h4" className="uppercase text-white">
+          Edit Recipe
+        </Typography>
+        <RecipeForm
+          formData={formData}
+          setFormData={setFormData}
+          imageUrl={imageUrl}
+          setImageUrl={setImageUrl}
+          categories={categories}
+          ingredients={ingredients}
+          units={units}
+          recipeIngredients={recipeIngredients}
+          onAddIngredient={(ing, uid, qty) =>
+            handleAddIngredient(ing, uid, qty, units)
+          }
+          onRemoveIngredient={handleRemoveIngredient}
+          onSubmit={handleSubmit}
+          submitLabel="Update Recipe"
+        />
+      </Stack>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snack.open}
+        autoHideDuration={2500}
+        onClose={handleSnackClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          severity={snack.severity}
+          onClose={handleSnackClose}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {snack.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

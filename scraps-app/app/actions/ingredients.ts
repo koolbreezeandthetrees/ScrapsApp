@@ -43,6 +43,18 @@ export async function getAllIngredients(): Promise<Ingredient[]> {
     .orderBy(ingredient.name);
 }
 
+// =============== GET: ALL INGREDIENTS ===============
+export async function getAllIngredientNames(): Promise<string[]> {
+  const result = await db
+    .select({
+      name: ingredient.name,
+    })
+    .from(ingredient)
+    .orderBy(ingredient.name);
+
+  return result.map((row) => row.name);
+}
+
 // =============== GET: INGREDIENT BY ID ===============
 export async function getIngredientById(id: number) {
   const result = await db
