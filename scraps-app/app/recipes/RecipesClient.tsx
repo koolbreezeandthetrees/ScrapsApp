@@ -228,10 +228,30 @@ export default function RecipesClient({
         >
           {selectedRecipe && (
             <>
-              <Typography variant="h4" className="uppercase text-white">
-                {selectedRecipe.title}
-              </Typography>
-
+              <Stack direction={"row"} alignItems="start" justifyContent="space-between" spacing={1}>
+                <Typography variant="h4" className="uppercase text-white">
+                  {selectedRecipe.title}
+                </Typography>
+                <Stack direction={"row"} alignItems="center" spacing={1}>
+                  <CopyLinkButton recipeId={selectedRecipe.id} />
+                  <IconButton
+                    onClick={() =>
+                      router.push(`/recipes/${selectedRecipe.id}/edit`)
+                    }
+                    size="small"
+                    sx={{
+                      color: "white",
+                      "&:hover": {
+                        bgcolor: "rgba(255,255,255,0.1)",
+                        transform: "scale(1.1)",
+                      },
+                      transition: "transform 0.1s",
+                    }}
+                  >
+                    <PenSquare size={16} />
+                  </IconButton>
+                </Stack>
+              </Stack>
               {/* Method */}
               <Stack className={recipeStyles.detailItem}>
                 <Typography variant="h6" className="text-white">
@@ -282,25 +302,6 @@ export default function RecipesClient({
                 className="mt-4 w-full object-cover h-auto"
               />
 
-              <Box className="absolute top-4 right-4 flex items-center space-x-1 z-10">
-                <CopyLinkButton recipeId={selectedRecipe.id} />
-                <IconButton
-                  onClick={() =>
-                    router.push(`/recipes/${selectedRecipe.id}/edit`)
-                  }
-                  size="small"
-                  sx={{
-                    color: "white",
-                    "&:hover": {
-                      bgcolor: "rgba(255,255,255,0.1)",
-                      transform: "scale(1.1)",
-                    },
-                    transition: "transform 0.1s",
-                  }}
-                >
-                  <PenSquare size={16} />
-                </IconButton>
-              </Box>
             </>
           )}
         </Stack>
