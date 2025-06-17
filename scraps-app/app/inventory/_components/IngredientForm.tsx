@@ -10,6 +10,9 @@ import {
   getUnitList,
 } from "@/app/actions";
 import { SelectableRow } from "@/components/SelectableRow";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import { Button, Snackbar, Alert } from "@mui/material";
 
 export default function IngredientForm() {
   const router = useRouter();
@@ -36,6 +39,23 @@ export default function IngredientForm() {
     category: null,
   });
 
+  // Snackbar state
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({ open: false, message: "", severity: "success" });
+
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
   useEffect(() => {
     async function fetchOptions() {
       try {
@@ -47,6 +67,11 @@ export default function IngredientForm() {
         setOptions({ units, categories, colors });
       } catch (error) {
         console.error("Error fetching form options:", error);
+        setSnackbar({
+          open: true,
+          message: "Failed to load form options.",
+          severity: "error",
+        });
       }
     }
     fetchOptions();
@@ -60,7 +85,11 @@ export default function IngredientForm() {
     e.preventDefault();
 
     if (!formData.unit || !formData.color || !formData.category) {
-      alert("Please fill out all fields.");
+      setSnackbar({
+        open: true,
+        message: "Please fill out all fields.",
+        severity: "error",
+      });
       return;
     }
 
@@ -74,7 +103,12 @@ export default function IngredientForm() {
       const newIngredientId = await createIngredient(form);
       if (!newIngredientId) throw new Error("No ingredient ID returned");
 
-      alert("Ingredient added successfully!");
+      setSnackbar({
+        open: true,
+        message: "Ingredient added successfully!",
+        severity: "success",
+      });
+
       setFormData({
         name: "",
         unit: null,
@@ -82,78 +116,101 @@ export default function IngredientForm() {
         category: null,
       });
 
-      router.push(`/inventory`);
+      // Delay navigation slightly to show the success snackbar
+      setTimeout(() => router.push(`/inventory`), 1000);
     } catch (error) {
       console.error("Error adding ingredient:", error);
-      alert("Failed to add ingredient.");
+      setSnackbar({
+        open: true,
+        message: "Failed to add ingredient.",
+        severity: "error",
+      });
     }
   };
 
   return (
-    <div className="form-container" id="add-ingredient-form">
-      <h2>Add new ingredient to database</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Name input */}
-        <div className="form-input-item">
-          <label htmlFor="name">Ingredient Name</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <>
+      <Stack className="border-top-2 border-white pt-35 mb-50">
+        <Typography variant="body1" component="h1" gutterBottom>
+          Add new ingredient to database
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          {/* Name input */}
+          <Stack gap={2} mt={2}>
+            <Typography variant="h6">Ingredient Name</Typography>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </Stack>
 
-        {/* Unit */}
-        <div className="form-input-item">
-          <label id="unit-label">Unit</label>
-          <SelectableRow
-            name="unit"
-            options={options.units}
-            selected={formData.unit}
-            onSelect={(unit) => setFormData((prev) => ({ ...prev, unit }))}
-            getLabel={(u) => u.name}
-            getValue={(u) => u.id}
-          />
-        </div>
+          {/* Unit */}
+          <Stack gap={2} mt={2}>
+            <Typography variant="h6">Unit</Typography>
+            <SelectableRow
+              name="unit"
+              options={options.units}
+              selected={formData.unit}
+              onSelect={(unit) => setFormData((prev) => ({ ...prev, unit }))}
+              getLabel={(u) => u.name}
+              getValue={(u) => u.id}
+            />
+          </Stack>
 
-        {/* Color */}
-        <div className="form-input-item">
-          <label id="color-label">Color</label>
-          <SelectableRow
-            name="color"
-            options={options.colors}
-            selected={formData.color}
-            onSelect={(color) => setFormData((prev) => ({ ...prev, color }))}
-            getLabel={(c) => c.name}
-            getValue={(c) => c.id}
-          />
-        </div>
+          {/* Color */}
+          <Stack gap={2} mt={2}>
+            <Typography variant="h6">Color</Typography>
+            <SelectableRow
+              name="color"
+              options={options.colors}
+              selected={formData.color}
+              onSelect={(color) => setFormData((prev) => ({ ...prev, color }))}
+              getLabel={(c) => c.name}
+              getValue={(c) => c.id}
+            />
+          </Stack>
 
-        {/* Category */}
-        <div className="form-input-item">
-          <label id="category-label">Category</label>
-          <SelectableRow
-            name="category"
-            options={options.categories}
-            selected={formData.category}
-            onSelect={(category) =>
-              setFormData((prev) => ({ ...prev, category }))
-            }
-            getLabel={(c) => c.name}
-            getValue={(c) => c.id}
-          />
-        </div>
+          {/* Category */}
+          <Stack gap={2} mt={2}>
+            <Typography variant="h6">Category</Typography>
+            <SelectableRow
+              name="category"
+              options={options.categories}
+              selected={formData.category}
+              onSelect={(category) =>
+                setFormData((prev) => ({ ...prev, category }))
+              }
+              getLabel={(c) => c.name}
+              getValue={(c) => c.id}
+            />
+          </Stack>
 
-        <button
-          type="submit"
-          className="button ing-form-submit-btn grow-element-normal"
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </form>
+      </Stack>
+
+      {/* Snackbar for feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          variant="filled"
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
         >
-          Submit
-        </button>
-      </form>
-    </div>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
