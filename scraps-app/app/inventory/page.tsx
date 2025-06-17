@@ -144,7 +144,13 @@ return (
   <Stack spacing={10}>
     {hasInventory === null
       ? (
-      <CircularProgress />
+        <Stack
+          alignItems="center"
+          justifyContent="center"
+          sx={{ width: "100%", minHeight: "60vh" }}
+        >
+          <CircularProgress />
+        </Stack>
       )
       : hasInventory ? (
       <Stack
