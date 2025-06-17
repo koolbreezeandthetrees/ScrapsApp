@@ -142,7 +142,9 @@ export default function EditRecipePage() {
       margin="0 auto"
       sx={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }}
     >
-      <Typography variant="h6">Edit Recipe</Typography>
+      <Typography variant="h4" className="uppercase text-white">
+        Edit Recipe
+      </Typography>
       <RecipeForm
         formData={formData}
         setFormData={setFormData}

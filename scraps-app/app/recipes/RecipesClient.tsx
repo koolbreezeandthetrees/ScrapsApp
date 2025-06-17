@@ -12,6 +12,7 @@ import { getAllIngredients } from "@/app/actions/ingredients";
 import { getUnitList } from "@/app/actions/common";
 import { createRecipe } from "@/app/actions/recipes";
 import { PenSquare } from "lucide-react";
+import { CopyLinkButton } from "./_components/CopyLinkButton";
 
 // Centralized Tailwind class strings for reuse
 export const recipeStyles = {
@@ -251,16 +252,25 @@ export default function RecipesClient({
                 className="mt-4 w-full object-cover h-auto"
               />
 
-              {/* Edit button */}
-              <IconButton
-                onClick={() =>
-                  router.push(`/recipes/${selectedRecipe.id}/edit`)
-                }
-                className="absolute top-2 right-2 z-10 hover:scale-110 transition-transform"
-                size="small"
-              >
-                <PenSquare size={16} className="text-white" />
-              </IconButton>
+              <Box className="absolute top-4 right-4 flex items-center space-x-1 z-10">
+                <CopyLinkButton recipeId={selectedRecipe.id} />
+                <IconButton
+                  onClick={() =>
+                    router.push(`/recipes/${selectedRecipe.id}/edit`)
+                  }
+                  size="small"
+                  sx={{
+                    color: "white",
+                    "&:hover": {
+                      bgcolor: "rgba(255,255,255,0.1)",
+                      transform: "scale(1.1)",
+                    },
+                    transition: "transform 0.1s",
+                  }}
+                >
+                  <PenSquare size={16} />
+                </IconButton>
+              </Box>
             </>
           )}
         </Stack>
