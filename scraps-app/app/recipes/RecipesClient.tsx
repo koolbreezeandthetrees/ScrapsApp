@@ -4,7 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Stack from "@mui/material/Stack";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { CategoryRecipe, FullRecipe, Ingredient, Unit } from "@/types/types";
 import { RecipeForm } from "@/app/recipes/_components/RecipeForm/RecipeForm";
 import { useRecipeForm } from "@/app/recipes/_components/RecipeForm/useRecipeForm";
@@ -56,6 +63,23 @@ export default function RecipesClient({
   const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
   const [allUnits, setAllUnits] = useState<Unit[]>([]);
   const [formReady, setFormReady] = useState(false);
+
+  // Snackbar state
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({ open: false, message: "", severity: "success" });
+
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
 
   const {
     formData,
@@ -110,14 +134,26 @@ export default function RecipesClient({
     try {
       const result = await createRecipe(form, recipeIngredients);
       if (result?.success) {
-        alert("Recipe created!");
+        setSnackbar({
+          open: true,
+          message: "Recipe created!",
+          severity: "success",
+        });
         setShowAddForm(false);
         router.refresh();
       } else {
-        alert("Failed to create recipe.");
+        setSnackbar({
+          open: true,
+          message: "Failed to create recipe.",
+          severity: "error",
+        });
       }
     } catch {
-      alert("Something went wrong.");
+      setSnackbar({
+        open: true,
+        message: "Something went wrong.",
+        severity: "error",
+      });
     }
   };
 
@@ -129,7 +165,7 @@ export default function RecipesClient({
         alignItems="flex-start"
         className={recipeStyles.listsContainer}
       >
-        {/* Categories: horizontal scroll on mobile, vertical on md+ */}
+        {/* Categories */}
         <Stack component="ul" className={recipeStyles.categoryColumn}>
           {categories.map((cat) => {
             const isSelected = cat.id === selectedCategoryId;
@@ -140,14 +176,11 @@ export default function RecipesClient({
                     setSelectedCategoryId(cat.id);
                     setSelectedRecipe(null);
                   }}
-                  className={`
-                    ${recipeStyles.categoryItem} 
-                    ${
-                      isSelected
-                        ? recipeStyles.categoryItemActive
-                        : recipeStyles.categoryItemInactive
-                    }
-                  `}
+                  className={`${recipeStyles.categoryItem} ${
+                    isSelected
+                      ? recipeStyles.categoryItemActive
+                      : recipeStyles.categoryItemInactive
+                  }`}
                 >
                   {cat.name}
                 </button>
@@ -156,7 +189,7 @@ export default function RecipesClient({
           })}
         </Stack>
 
-        {/* Recipe list: full width on mobile, fixed on md+ */}
+        {/* Recipe list */}
         <Stack component="div" className={recipeStyles.recipeColumn}>
           {selectedCategoryId == null ? (
             <Typography variant="h6">please select a category.</Typography>
@@ -168,14 +201,11 @@ export default function RecipesClient({
                   <li key={r.id}>
                     <button
                       onClick={() => setSelectedRecipe(r)}
-                      className={`
-            ${recipeStyles.recipeItem}
-            ${
-              isRecipeSelected
-                ? recipeStyles.recipeItemActive
-                : recipeStyles.recipeItemInactive
-            }
-          `}
+                      className={`${recipeStyles.recipeItem} ${
+                        isRecipeSelected
+                          ? recipeStyles.recipeItemActive
+                          : recipeStyles.recipeItemInactive
+                      }`}
                     >
                       {r.title}
                     </button>
@@ -190,7 +220,7 @@ export default function RecipesClient({
           )}
         </Stack>
 
-        {/* Details: stacked below list on mobile */}
+        {/* Details */}
         <Stack
           className={`${recipeStyles.detailColumn} ${
             selectedRecipe ? recipeStyles.detailBorder : ""
@@ -279,9 +309,7 @@ export default function RecipesClient({
       {/* Add New Recipe Form */}
       {showAddForm && formReady && (
         <Box pb={6}>
-          <Stack
-            className={recipeStyles.formContainer}
-          >
+          <Stack className={recipeStyles.formContainer}>
             <Typography variant="h5" className="text-white">
               Add New Recipe
             </Typography>
@@ -319,6 +347,23 @@ export default function RecipesClient({
       >
         {showAddForm ? "Close" : "+ Add Recipe"}
       </Button>
+
+      {/* Snackbar for feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          variant="filled"
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
