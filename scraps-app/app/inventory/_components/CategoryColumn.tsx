@@ -11,7 +11,7 @@ import {
   InventoryItem as InventoryItemType,
   Color,
 } from "@/types/types";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 // import { useUser } from "@clerk/nextjs";
 
 interface CategoryColumnProps {
@@ -70,7 +70,10 @@ export default function CategoryColumn({
             width={20}
             height={20}
           />
-          <h3>{category.name}</h3>
+          <Typography
+            variant="body1"
+            color="text.primary"
+          >{category.name}</Typography>
         </Stack>
 
         {/* MIDDLE */}

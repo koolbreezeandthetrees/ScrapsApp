@@ -267,7 +267,7 @@ export default function RootLayout({
                 <Header />
               </SignedIn>
               <Stack
-                maxWidth="1400px"
+                maxWidth="1500px"
                 mx="auto"
                 width={"100%"}
                 justifyContent={"start"}

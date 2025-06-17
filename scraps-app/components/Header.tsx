@@ -21,7 +21,7 @@ export default function Header() {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        maxWidth="1400px"
+        maxWidth="1500px"
         className="pt-2 px-8 mx-auto"
       >
         {/* Logo */}
