@@ -13,6 +13,7 @@ import { SelectableRow } from "@/components/SelectableRow";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { Button, Snackbar, Alert } from "@mui/material";
+import { recipeStyles } from "@/app/recipes/RecipesClient";
 
 export default function IngredientForm() {
   const router = useRouter();
@@ -130,11 +131,12 @@ export default function IngredientForm() {
 
   return (
     <>
-      <Stack className="border-top-2 border-white pt-35 mb-50">
-        <Typography variant="body1" component="h1" gutterBottom>
+      <Stack className={recipeStyles.formContainer}>
+        <Typography variant="h5" className="text-white">
           Add new ingredient to database
         </Typography>
         <form onSubmit={handleSubmit}>
+          <Stack gap={2} mt={2}>
           {/* Name input */}
           <Stack gap={2} mt={2}>
             <Typography variant="h6">Ingredient Name</Typography>
@@ -189,9 +191,15 @@ export default function IngredientForm() {
             />
           </Stack>
 
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            type="submit"
+            variant="text"
+            color="info"
+            sx={{ mt: 2, alignSelf: "center" }}
+          >
             Submit
-          </Button>
+            </Button>
+          </Stack>
         </form>
       </Stack>
 

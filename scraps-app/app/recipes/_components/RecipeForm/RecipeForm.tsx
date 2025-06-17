@@ -9,7 +9,7 @@ import {
   Unit,
 } from "@/types/types";
 import AddIngredientForm from "./AddIngredientForm";
-import { IconButton, List, ListItem, Stack } from "@mui/material"; 
+import { Button, IconButton, List, ListItem, Stack } from "@mui/material"; 
 import CloseIcon from "@mui/icons-material/Close";
 
 type RecipeFormProps = {
@@ -206,7 +206,14 @@ export function RecipeForm({
           />
         </Stack>
 
-        <button type="submit">{submitLabel}</button>
+        <Button
+          type="submit"
+          variant="text"
+          color="info"
+          sx={{ mt: 2, alignSelf: "center" }}
+        >
+          {submitLabel}
+        </Button>
       </div>
     </form>
   );
