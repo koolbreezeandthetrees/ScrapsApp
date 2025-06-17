@@ -7,6 +7,7 @@ export interface Unit {
 export interface CategoryIngredient {
   id: number;
   name: string;
+  description: string
 }
 
 export interface CategoryRecipe {

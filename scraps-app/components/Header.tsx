@@ -18,8 +18,8 @@ export default function Header() {
       <Stack
         direction="row"
         justifyContent="space-between"
-      alignItems="center"
-      width={"100%"}
+        alignItems="center"
+        width={"100%"}
         maxWidth="1500px"
         className="pt-2 px-8 mx-auto"
       >

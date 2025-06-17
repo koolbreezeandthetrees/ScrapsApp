@@ -259,23 +259,25 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body>
+        <body className="flex flex-col min-h-screen">
           <CacheProvider value={clientSideEmotionCache}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <SignedIn>
                 <Header />
               </SignedIn>
-              <Stack
-                maxWidth="1500px"
-                mx="auto"
-                width={"100%"}
-                justifyContent={"start"}
-                pt={8}
-                px={4}
-              >
-                {children}
-              </Stack>
+              <main className="flex-grow">
+                <Stack
+                  maxWidth="1500px"
+                  mx="auto"
+                  width={"100%"}
+                  justifyContent={"start"}
+                  pt={8}
+                  px={4}
+                >
+                  {children}
+                </Stack>
+              </main>
               <Footer />
             </ThemeProvider>
           </CacheProvider>

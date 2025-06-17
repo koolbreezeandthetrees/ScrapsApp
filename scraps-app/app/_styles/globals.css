@@ -1,8 +1,7 @@
 @import "./reset.css";
 @import "./inputs.css";
 @import "./recipe.css";
-
-@import "./utils/animations.css";
+@import "./animations.css";
 
 @tailwind base;
 @tailwind components;

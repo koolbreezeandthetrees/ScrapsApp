@@ -73,7 +73,7 @@ export default function CategoryColumn({
           <Typography
             variant="body1"
             color="text.primary"
-          >{category.name}</Typography>
+          >{category.description}</Typography>
         </Stack>
 
         {/* MIDDLE */}

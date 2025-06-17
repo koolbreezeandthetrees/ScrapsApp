@@ -14,6 +14,7 @@ import IngredientForm from "./_components/IngredientForm";
 import CategoryColumn from "./_components/CategoryColumn";
 import { CategoryIngredient, InventoryItem } from "@/types/types";
 import { Box, Button, CircularProgress, Stack } from "@mui/material";
+import CreateInv from "./_components/createInv";
 
 export default function InventoryPage() {
   const { user } = useUser();
@@ -140,17 +141,15 @@ export default function InventoryPage() {
  
 return (
   <Stack spacing={10}>
-    {hasInventory === null
-      ? (
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          sx={{ width: "100%", minHeight: "60vh" }}
-        >
-          <CircularProgress />
-        </Stack>
-      )
-      : hasInventory ? (
+    {hasInventory === null ? (
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        sx={{ width: "100%", minHeight: "60vh" }}
+      >
+        <CircularProgress />
+      </Stack>
+    ) : hasInventory ? (
       <Stack
         direction="row"
         spacing={3}
@@ -170,37 +169,30 @@ return (
         ))}
       </Stack>
     ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreateInventory}
-          >
-            Create Inventory
-          </Button>
+      <CreateInv onCreate={handleCreateInventory} />
     )}
-    
 
     <Button
       variant="contained"
       color="info"
       onClick={() => setShowIngredientForm((previous) => !previous)}
-    sx={{
-      position: "fixed",
-      bottom: "50px",
-      right: "70px",
-      zIndex: 1000,
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
-    }}
+      sx={{
+        position: "fixed",
+        bottom: "50px",
+        right: "70px",
+        zIndex: 1000,
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+      }}
     >
-    {showIngredientForm ? "Close Form" : "+ Add Ingredient"}
+      {showIngredientForm ? "Close Form" : "+ Add Ingredient"}
     </Button>
 
     {/* ✅ Conditionally render the IngredientForm */}
-    {showIngredientForm &&
+    {showIngredientForm && (
       <Box pb={10}>
         <IngredientForm />
       </Box>
-    }
+    )}
   </Stack>
 );
 }
