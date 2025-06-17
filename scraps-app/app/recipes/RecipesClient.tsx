@@ -280,7 +280,6 @@ export default function RecipesClient({
       {showAddForm && formReady && (
         <Box pb={6}>
           <Stack
-            onSubmit={handleCreateRecipe}
             className={recipeStyles.formContainer}
           >
             <Typography variant="h5" className="text-white">
