@@ -9,12 +9,14 @@ type Props = {
     recipes: FullRecipeWithMissingInfo[];
   }[];
   selectedCategoryId: number | null;
+  selectedRecipeId: number | null;
   onSelectRecipe: (recipe: FullRecipeWithMissingInfo) => void;
 };
 
 export default function RecipeList({
   groupedRecipes,
   selectedCategoryId,
+  selectedRecipeId,
   onSelectRecipe,
 }: Props) {
   // Local delay state
@@ -59,19 +61,29 @@ export default function RecipeList({
               {group.missingCount}
             </div>
             <Stack component="ul" spacing={1}>
-              {group.recipes.map((r) => (
-                <li key={r.id}>
-                  <button
-                    className="lowercase text-xl text-white hover:text-gray-200"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onSelectRecipe(r);
-                    }}
-                  >
-                    {r.title}
-                  </button>
-                </li>
-              ))}
+              {group.recipes.map((r) => {
+                const isActive = r.id === selectedRecipeId; // ← active check
+                return (
+                  <li key={r.id}>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onSelectRecipe(r);
+                      }}
+                      className={`
+                        ${recipeStyles.recipeItem}
+                        ${
+                          isActive
+                            ? recipeStyles.recipeItemActive
+                            : recipeStyles.recipeItemInactive
+                        }
+                      `}
+                    >
+                      {r.title}
+                    </button>
+                  </li>
+                );
+              })}
             </Stack>
           </div>
         ))}

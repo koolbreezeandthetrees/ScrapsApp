@@ -10,16 +10,12 @@ import RecipeDetails from "./_components/RecipeDetails";
 import RecipeList from "./_components/RecipeList";
 import { Stack } from "@mui/material";
 
-
 export default function CalculatePage() {
   const { user } = useUser();
   const [categories, setCategories] = useState<CategoryRecipe[]>([]);
   const [recipes, setRecipes] = useState<FullRecipeWithMissingInfo[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
-  );
-  const [selectedRecipe, setSelectedRecipe] =
-    useState<FullRecipeWithMissingInfo | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<FullRecipeWithMissingInfo | null>(null);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -41,38 +37,45 @@ export default function CalculatePage() {
 
   const groupedByMissingCount = useMemo(() => {
     const groups: Record<number, FullRecipeWithMissingInfo[]> = {};
-    for (const recipe of filteredByCategory) {
+    filteredByCategory.forEach((recipe) => {
       if (!groups[recipe.missingCount]) groups[recipe.missingCount] = [];
       groups[recipe.missingCount].push(recipe);
-    }
+    });
     return Object.entries(groups)
-      .sort(([a], [b]) => parseInt(a) - parseInt(b))
-      .map(([missingCount, recs]) => ({
-        missingCount: parseInt(missingCount),
-        recipes: recs,
-      }));
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([count, recs]) => ({ missingCount: Number(count), recipes: recs }));
   }, [filteredByCategory]);
 
   return (
     <Stack
-      direction="row"
+      direction={{ xs: "column", md: "row" }}
       alignItems="flex-start"
-      width={"100%"}
-      className="gap-5 box-border max-w-[1450px] mx-auto text-lg px-4 py-8 flex justify-start"
+      width="100%"
+      className="flex flex-col md:flex-row gap-5 box-border max-w-[1450px] mx-auto text-lg px-4 py-8"
     >
-      <CategoryList
-        categories={categories}
-        onSelectCategory={setSelectedCategoryId}
-        selectedCategoryId={selectedCategoryId}
-      />
-      <RecipeList
-        groupedRecipes={groupedByMissingCount}
-        selectedCategoryId={selectedCategoryId}
-        onSelectRecipe={setSelectedRecipe}
-      />
-      <RecipeDetails recipe={selectedRecipe} />
+      {/* Categories */}
+      <div className="flex flex-row flex-wrap gap-4 overflow-x-auto w-full md:flex-col md:w-48">
+        <CategoryList
+          categories={categories}
+          onSelectCategory={setSelectedCategoryId}
+          selectedCategoryId={selectedCategoryId}
+        />
+      </div>
+
+      {/* Recipe List */}
+      <div className="w-full md:w-[530px]">
+        <RecipeList
+          groupedRecipes={groupedByMissingCount}
+          selectedCategoryId={selectedCategoryId}
+          onSelectRecipe={setSelectedRecipe}
+          selectedRecipeId={selectedRecipe?.id ?? null}
+        />
+      </div>
+
+      {/* Recipe Details */}
+      <div className="w-full md:flex-1">
+        <RecipeDetails recipe={selectedRecipe} />
+      </div>
     </Stack>
   );
 }
-
-

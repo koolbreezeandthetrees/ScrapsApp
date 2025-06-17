@@ -15,21 +15,29 @@ export default function CategoryList({
 }: Props) {
   return (
     <Stack component="ul" className={recipeStyles.categoryColumn}>
-      {categories.map((cat) => (
-        <li key={cat.id}>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectCategory(cat.id);
-            }}
-            className={`lowercase text-xl hover:text-gray-200 ${
-              selectedCategoryId === cat.id ? "text-blue-500" : "text-white"
-            }`}
-          >
-            {cat.name}
-          </button>
-        </li>
-      ))}
+      {categories.map((cat) => {
+        const isActive = selectedCategoryId === cat.id;
+        return (
+          <li key={cat.id}>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onSelectCategory(cat.id);
+              }}
+              className={`
+                ${recipeStyles.categoryItem}
+                ${
+                  isActive
+                    ? recipeStyles.categoryItemActive
+                    : recipeStyles.categoryItemInactive
+                }
+              `}
+            >
+              {cat.name}
+            </button>
+          </li>
+        );
+      })}
     </Stack>
   );
 }

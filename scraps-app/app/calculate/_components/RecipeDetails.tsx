@@ -67,7 +67,7 @@ export default function RecipeDetails({ recipe }: Props) {
         alt="Recipe"
         height={400}
         width={400}
-        className="mt-4"
+        className="mt-4 w-full object-cover h-auto"
       />
     </Stack>
   );

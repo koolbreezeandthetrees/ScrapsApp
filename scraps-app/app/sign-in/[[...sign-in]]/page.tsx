@@ -11,7 +11,7 @@ export default function SignInPage() {
       alignItems="center"
       justifyContent="center"
       sx={{
-        minHeight: "100vh",
+        minHeight: "60vh",
         p: 4,
         maxWidth: 1200,
         m: "0 auto",

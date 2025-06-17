@@ -15,18 +15,26 @@ import { PenSquare } from "lucide-react";
 
 // Centralized Tailwind class strings for reuse
 export const recipeStyles = {
-  listsContainer: "px-4 py-8 flex gap-5 justify-start",
-  categoryColumn: "flex flex-col gap-4 w-48",
-  // Always show border between categories and recipes
+  listsContainer: "px-4 py-8 flex flex-col md:flex-row gap-5 justify-start",
+  categoryColumn:
+    "flex flex-row flex-wrap gap-4 justify-start w-full md:flex-col md:w-48",
+  categoryItem: "lowercase text-xl whitespace-nowrap hover:text-gray-200",
+  categoryItemActive: "text-[#e4dc42] font-semibold",
+  categoryItemInactive: "text-white",
+  recipeItem: "lowercase text-xl whitespace-nowrap hover:text-gray-200",
+  recipeItemActive: "text-[#e4dc42] font-semibold",
+  recipeItemInactive: "text-white",
   recipeColumn:
-    "w-[530px] flex-shrink flex flex-col gap-2 border-l-2 border-white pl-8",
-  detailColumn: "flex-1 relative flex flex-col gap-4 pl-8",
-  detailBorder: "border-l-2 border-white",
+    "w-full md:w-[530px] flex-shrink flex flex-col gap-2 border-t-2 border-white pt-4 md:pt-0 md:border-t-0 md:border-l-2 md:pl-8",
+  detailColumn: "flex-1 relative flex flex-col gap-4",
+  detailBorder:
+    "border-t-2 border-white pt-4 md:pt-0 md:border-t-0 md:border-l-2 md:pl-8",
   detailItem: "flex flex-col gap-2",
   greyText: "text-[#e5dfdb] text-lg",
   missingIngredient: "text-[#BB5C4A] text-lg",
   greyList: "text-[#e5dfdb] text-lg",
-  formContainer: "flex flex-col gap-5 rounded-lg bg-white/20 p-8 mt-8",
+  formContainer:
+    "flex flex-col gap-5 rounded-lg bg-white/20 p-8 mt-8 w-full md:w-auto",
 };
 
 interface RecipesClientProps {
@@ -114,58 +122,77 @@ export default function RecipesClient({
 
   return (
     <>
-      {/* Top three-column layout */}
+      {/* Top responsive layout */}
       <Stack
         direction="row"
         alignItems="flex-start"
         className={recipeStyles.listsContainer}
       >
-        {/* Column 1: Categories */}
+        {/* Categories: horizontal scroll on mobile, vertical on md+ */}
         <Stack component="ul" className={recipeStyles.categoryColumn}>
-          {categories.map((cat) => (
-            <li key={cat.id}>
-              <button
-                onClick={() => {
-                  setSelectedCategoryId(cat.id);
-                  setSelectedRecipe(null);
-                }}
-                className="lowercase text-xl text-white hover:text-gray-200"
-              >
-                {cat.name}
-              </button>
-            </li>
-          ))}
+          {categories.map((cat) => {
+            const isSelected = cat.id === selectedCategoryId;
+            return (
+              <li key={cat.id}>
+                <button
+                  onClick={() => {
+                    setSelectedCategoryId(cat.id);
+                    setSelectedRecipe(null);
+                  }}
+                  className={`
+                    ${recipeStyles.categoryItem} 
+                    ${
+                      isSelected
+                        ? recipeStyles.categoryItemActive
+                        : recipeStyles.categoryItemInactive
+                    }
+                  `}
+                >
+                  {cat.name}
+                </button>
+              </li>
+            );
+          })}
         </Stack>
 
-        {/* Column 2: Recipe List */}
+        {/* Recipe list: full width on mobile, fixed on md+ */}
         <Stack component="div" className={recipeStyles.recipeColumn}>
-
           {selectedCategoryId == null ? (
-            <Typography variant="h6">Please select a category.</Typography>
-
+            <Typography variant="h6">please select a category.</Typography>
           ) : filteredRecipes.length > 0 ? (
             <Stack component="ul" spacing={1}>
-              {filteredRecipes.map((r) => (
-                <li key={r.id}>
-                  <button
-                    onClick={() => setSelectedRecipe(r)}
-                    className="lowercase text-xl text-white hover:text-gray-200"
-                  >
-                    {r.title}
-                  </button>
-                </li>
-              ))}
-            </Stack>
+  {filteredRecipes.map((r) => {
+    const isRecipeSelected = selectedRecipe?.id === r.id;
+    return (
+      <li key={r.id}>
+        <button
+          onClick={() => setSelectedRecipe(r)}
+          className={`
+            ${recipeStyles.recipeItem}
+            ${isRecipeSelected
+              ? recipeStyles.recipeItemActive
+              : recipeStyles.recipeItemInactive
+            }
+          `}
+        >
+          {r.title}
+        </button>
+      </li>
+    );
+  })}
+</Stack>
           ) : (
-            <Typography variant="h6">No recipes found for this category.</Typography>
+            <Typography variant="h6" color="error">
+              no recipes found for this category.
+            </Typography>
           )}
         </Stack>
 
-        {/* Column 3: Recipe Details */}
+        {/* Details: stacked below list on mobile */}
         <Stack
           className={`${recipeStyles.detailColumn} ${
             selectedRecipe ? recipeStyles.detailBorder : ""
-          }`}
+          } mt-8 md:mt-0`}
         >
           {selectedRecipe && (
             <>
@@ -220,7 +247,7 @@ export default function RecipesClient({
                 alt="Recipe image"
                 width={400}
                 height={400}
-                className="mt-4"
+                className="mt-4 w-full object-cover h-auto"
               />
 
               {/* Edit button */}
@@ -283,4 +310,3 @@ export default function RecipesClient({
     </>
   );
 }
-
