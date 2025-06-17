@@ -57,6 +57,7 @@ export async function getIngredientById(id: number) {
       category: {
         id: categoryIngredient.id,
         name: categoryIngredient.name,
+        description: categoryIngredient.description,
       },
       color: {
         id: color.id,
