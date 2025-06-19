@@ -1,4 +1,4 @@
-"use server";
+export const dynamic = "force-dynamic"; 
 
 import RecipesClient from "@/app/recipes/RecipesClient";
 import { getAllRecipeCategories, getAllRecipes } from "@/app/actions/recipes";
